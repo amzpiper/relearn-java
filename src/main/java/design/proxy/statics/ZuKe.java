@@ -1,6 +1,6 @@
-package com.proxy.statics;
+package design.proxy.statics;
 
-import com.proxy.statics.impl.ZhongJie;
+import design.proxy.statics.impl.ZhongJie;
 
 /**
  * 租客

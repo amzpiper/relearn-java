@@ -1,4 +1,4 @@
-package com.proxy.statics;
+package design.proxy.statics;
 
 /**
  * 租房接口

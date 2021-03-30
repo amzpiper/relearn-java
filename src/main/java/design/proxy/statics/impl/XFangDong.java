@@ -1,6 +1,6 @@
-package com.proxy.statics.impl;
+package design.proxy.statics.impl;
 
-import com.proxy.statics.TakeHouse;
+import design.proxy.statics.TakeHouse;
 
 /**
  * 真实类：房东
