@@ -1,5 +1,6 @@
 package base;
 
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -7,7 +8,7 @@ import java.util.Scanner;
  * @author guoyh
  */
 public class BaseCase {
-    public static void main(String[] args) {
+    public static void main(String... args) {
         //浮动类型
         float f = 3.14e38f;
         System.out.println(f);
@@ -63,6 +64,7 @@ public class BaseCase {
         //初始化为默认值，整型都是0，浮点型是0.0，布尔型是false
         int[] ns = new int[15];
 
+
         //格式化输出
         System.out.printf("%.2f\n", .222f);
         //预占位
@@ -79,13 +81,12 @@ public class BaseCase {
 
         //利用短路，s1=null会报异常
         String s1 = null;
-        if (s1 != null && s1.equals("hello")) {
+        if (s1 != null && "hello".equals(s1)) {
             System.out.println("hello");
         }
 
         //新的switch语法，不但不需要break，还可以直接返回值
-        /*
-        String fruit = "apple";
+        /*String fruit = "apple";
         switch (fruit){
             case "apple" -> System.out.println(1);
             case "paer" -> System.out.println(2);
@@ -96,6 +97,17 @@ public class BaseCase {
             default -> System.out.println(3);
         }*/
 
+        int[] intArray = {1, 221, 21, 32, 61, 1, 341, 33};
+        Arrays.sort(intArray);
+        System.out.println(Arrays.toString(intArray));
 
+        for (String arg : args) {
+            if ("-version".equals(arg)) {
+                System.out.println("v 1.0");
+                break;
+            }
+        }
+        String str = "";
+        System.out.println(str instanceof String);
     }
 }
