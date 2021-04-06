@@ -8,6 +8,8 @@ import java.util.Scanner;
  * @author guoyh
  */
 public class BaseCase {
+
+
     public static void main(String... args) {
         //浮动类型
         float f = 3.14e38f;
@@ -109,5 +111,26 @@ public class BaseCase {
         }
         String str = "";
         System.out.println(str instanceof String);
+
+        Properties p = System.getProperties();
+        System.out.println(p.getProperty("java.version"));
+
+        Outer outer = new Outer("");
+        Outer.Inner inner = outer.new Inner();
+
+
+    }
+}
+class Outer {
+    private String name;
+
+    Outer(String name) {
+        this.name = name;
+    }
+
+    class Inner {
+        void hello() {
+            System.out.println("Hello, " + Outer.this.name);
+        }
     }
 }
