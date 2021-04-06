@@ -1,5 +1,6 @@
 package base;
 
+import javax.xml.XMLConstants;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
@@ -118,7 +119,8 @@ public class BaseCase {
         Outer outer = new Outer("");
         Outer.Inner inner = outer.new Inner();
 
-
+        // 必须引入java.xml模块后才能使用其中的类:
+        System.out.println(XMLConstants.XML_NS_PREFIX);
     }
 }
 class Outer {
