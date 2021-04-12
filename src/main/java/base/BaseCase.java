@@ -4,10 +4,9 @@ import javax.xml.XMLConstants;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.Scanner;
-import java.util.StringJoiner;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.*;
 
 /**
  * @author guoyh
@@ -198,6 +197,34 @@ public class BaseCase {
         System.out.println(one.compareTo(two));
         System.out.println(one.compareTo(three));
 
+        //常用工具类
+        //绝对值
+        System.out.println(Math.abs(-100));
+        System.out.println(Math.sqrt(2));
+
+        //对数
+        System.out.println(Math.exp(2));
+        System.out.println(Math.log(4));
+        System.out.println(Math.log10(100));
+
+        //三角函数
+        System.out.println(Math.sin(90));
+        System.out.println(Math.sin(Math.PI / 6));
+
+        Random random = new Random(12345);
+        System.out.println(random.nextInt(100));
+
+        SecureRandom sr = new SecureRandom();
+        System.out.println(sr.nextInt(100));
+
+        try {
+            sr = SecureRandom.getInstanceStrong(); // 获取高强度安全随机数生成器
+        } catch (NoSuchAlgorithmException e) {
+            sr = new SecureRandom(); // 获取普通的安全随机数生成器
+        }
+        byte[] buffer = new byte[16];
+        sr.nextBytes(buffer); // 用安全随机数填充buffer
+        System.out.println(Arrays.toString(buffer));
     }
 }
 //Java 14开始，引入了新的Record类,
