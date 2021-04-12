@@ -1,9 +1,11 @@
 package base;
 
 import javax.xml.XMLConstants;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.StringJoiner;
 
 /**
  * @author guoyh
@@ -121,6 +123,76 @@ public class BaseCase {
 
         // 必须引入java.xml模块后才能使用其中的类:
         System.out.println(XMLConstants.XML_NS_PREFIX);
+
+        Integer x1 = 127;
+        Integer y1 = 127;
+        System.out.println("x1 == y1:"+(x1 == y1));
+
+        Integer x2 = 12700123;
+        Integer y2 = 12700123;
+        System.out.println("x2 == y2:" + (x2 == y2));
+
+        Integer oo = Integer.valueOf(1);
+        System.out.println(oo);
+
+        //无符号
+        byte xx = -1;
+        byte yy = 127;
+        System.out.println(Byte.toUnsignedInt(xx));
+        System.out.println(Byte.toUnsignedInt(yy));
+
+        //枚举
+        System.out.println(Color.RED.name());
+        System.out.println(Color.RED.ordinal());
+        Color red = Color.RED;
+        System.out.println(red.value);
+        System.out.println(red.toString());
+        switch (red){
+            case RED:
+                System.out.println("这是红色");break;
+            case BLUE:
+                System.out.println("这是蓝色");break;
+            default:
+                throw new RuntimeException("cannot process" + red);
+        }
+
+        //StringJoiner
+        String[] names = {"Bob", "Alice", "Grace"};
+        StringJoiner sj = new StringJoiner(",", "Hello", "!");
+        for (String name : names) {
+            sj.add(name);
+        }
+        System.out.println(sj);
+        String name = String.join(",", names);
+
+        BigInteger bi = new BigInteger("10");
+        BigInteger bi2 = new BigInteger("2");
+        System.out.println(bi.pow(100));
+        System.out.println(bi.longValueExact());
+        System.out.println(bi.subtract(bi2));
+        System.out.println(bi.divide(bi2));
+    }
+}
+//Java 14开始，引入了新的Record类,
+//public record Point(int x,int y){}
+class Person {
+    private String name;
+    private int age;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
 class Outer {
