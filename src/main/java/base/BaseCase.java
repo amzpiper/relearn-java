@@ -1,7 +1,9 @@
 package base;
 
 import javax.xml.XMLConstants;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
@@ -165,12 +167,37 @@ public class BaseCase {
         System.out.println(sj);
         String name = String.join(",", names);
 
+        // 大数
         BigInteger bi = new BigInteger("10");
         BigInteger bi2 = new BigInteger("2");
         System.out.println(bi.pow(100));
         System.out.println(bi.longValueExact());
         System.out.println(bi.subtract(bi2));
         System.out.println(bi.divide(bi2));
+
+        BigDecimal bd = new BigDecimal("10.1111910010010000000");
+        BigDecimal bd2 = new BigDecimal("10.100091001001");
+        BigDecimal bd3 = new BigDecimal("10100");
+        System.out.println(bd.multiply(bd2));
+        System.out.println(bd3.stripTrailingZeros().scale());
+        System.out.println(bd.stripTrailingZeros());
+        System.out.println(bd2.setScale(4, RoundingMode.HALF_UP));
+        System.out.println(bd2.setScale(4, RoundingMode.DOWN));
+
+        // 做除法时,存在无法除尽的情况，这时，就必须指定精度以及如何进行截断
+        BigDecimal one = new BigDecimal("12.345");
+        BigDecimal two = new BigDecimal("0.12");
+        BigDecimal three = new BigDecimal("12.345");
+        BigDecimal res = one.divide(two, 10, RoundingMode.HALF_UP);
+        System.out.println(res);
+        BigDecimal[] dr = one.divideAndRemainder(two);
+        for (BigDecimal bigDecimal : dr) {
+            System.out.println(bigDecimal);
+        }
+        //1:false;0:true
+        System.out.println(one.compareTo(two));
+        System.out.println(one.compareTo(three));
+
     }
 }
 //Java 14开始，引入了新的Record类,
