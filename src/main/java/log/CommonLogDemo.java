@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Commons Logging，可以作为“日志接口”来使用。而真正的“日志实现”可以使用Log4j。
  * @author guoyh
  */
 public class CommonLogDemo {
@@ -22,6 +23,7 @@ public class CommonLogDemo {
         log.warn("end.");
 
         foo();
+        new Person().foo();
     }
 
     /**
@@ -33,8 +35,8 @@ public class CommonLogDemo {
     }
 }
 /**
- * LogFactory.getLog(getClass())，
- * 虽然也可以用LogFactory.getLog(Person.class)，
+ * LogFactory.getLog(getClass())
+ * 虽然也可以用LogFactory.getLog(Person.class)
  * 但是前一种方式有个非常大的好处，就是子类可以直接使用该log实例
  */
 class Person{
