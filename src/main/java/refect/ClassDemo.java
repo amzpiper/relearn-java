@@ -2,7 +2,7 @@ package refect;
 
 import org.apache.commons.logging.LogFactory;
 
-public class Demo {
+public class ClassDemo {
     public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         //方法1.获取String的Class实例
         Class cls = String.class;
