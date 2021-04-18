@@ -70,7 +70,7 @@ public class AnnotationDemo {
         //使用Range注解
         //定义了注解，本身对程序逻辑没有任何影响。我们必须自己编写代码来使用注解。
         //编写一个Person实例的检查方法，它可以检查Person实例的String字段长度是否满足@Range的定义：
-        Person person = new Person("guoyha", "beijing");
+        Person person = new Person("guoyha", "beijing",123);
         check(person);
     }
 
@@ -83,10 +83,18 @@ public class AnnotationDemo {
                 //获取person的field值
                 try {
                     Object value = field.get(person);
+                    //如果字段类型是String，就检查String的长度，如果字段是int，就检查int的范围
                     if (value instanceof String) {
                         String s = (String) value;
                         // 判断值是否满足@Range的min/max
                         if (s.length() < range.min() || s.length() > range.max()) {
+                            throw new IllegalArgumentException("Invalid field: " + field.getName());
+                        }else{
+                            System.out.println("field: "+field.getName()+" is ok:");
+                        }
+                    } else if (value instanceof Integer) {
+                        Integer n = (Integer) value;
+                        if (n < range.min() || n > range.max()) {
                             throw new IllegalArgumentException("Invalid field: " + field.getName());
                         }else{
                             System.out.println("field: "+field.getName()+" is ok:");
@@ -109,13 +117,17 @@ class Person {
     @Range(max=10)
     public String city;
 
+    @Range(max=255)
+    public Integer age;
+
     public Person() {
 
     }
 
-    public Person(String name, String city) {
+    public Person(String name, String city,Integer age) {
         this.name = name;
         this.city = city;
+        this.age = age;
     }
 
     public void hello(@NotNull @Check(max=5) String name, @NotNull String prefix) {
