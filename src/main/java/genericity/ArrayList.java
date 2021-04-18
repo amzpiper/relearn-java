@@ -2,6 +2,8 @@ package genericity;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ArrayList<T> {
     private T[] array;
@@ -87,11 +89,58 @@ public class ArrayList<T> {
         //  不能实例化T类型，例如：new T()。
         //泛型方法要防止重复定义方法，例如：public boolean equals(T obj)；
         //子类可以获取父类的泛型类型<T>。
+
+
+        //extends
+        Pair2<Integer> pair2 = new Pair2<>(1,2);
+        add(pair2);
+
+        //只读list
+        List<Integer> list = new LinkedList<>();
+        list.add(1);
+        list.add(2);
+        int count = sumOfList(list);
+        System.out.println(count);
+
+        //extend限制T类型
+        Pair3<Number> p1 = null;
+        Pair3<Integer> p2 = new Pair3<>(1, 2);
+        Pair3<Double> p3 = null;
+
+        //小结
+        //使用类似<? extends Number>通配符作为方法参数时表示：
+        //  方法内部可以调用获取Number引用的方法，例如：Number n = obj.getFirst();；
+        //  方法内部无法调用传入Number引用的方法（null除外），例如：obj.setFirst(Number n);。
+        //即一句话总结：使用extends通配符表示可以读，不能写。
+        //使用类似<T extends Number>定义泛型类时表示：
+        //  泛型类型限定为Number以及Number的子类。
     }
 
     //对于静态方法，我们可以单独改写为“泛型”方法，只需要使用另一个类型即可。
     public static <K> ArrayList<K> create(K first, K last) {
         return new ArrayList<K>();
+    }
+    //这种使用<? extends Number>的泛型定义称之为上界通配符,把泛型类型T的上界限定在Number
+    static void add(Pair2<? extends Number> pair2) {
+        Number first = pair2.getFirst();
+        Number last = pair2.getLast();
+        //方法参数签名setFirst(? extends Number)无法传递任何Number的子类型给setFirst(? extends Number)。
+        //这里唯一的例外是可以给方法参数传入null
+        //pair2.setFirst(new Integer(first.intValue() + 100));
+        //pair2.setLast(new Integer(last.intValue() + 100));
+        System.out.println(first.intValue() + "" + last.intValue());
+    }
+    //允许调用get()方法获取Integer的引用；
+    //不允许调用set(? extends Integer)方法并传入任何Integer的引用（null除外）
+    //表明了该方法内部只会读取List的元素，不会修改List的元素
+    static int sumOfList(List<? extends Integer> list) {
+        int sum = 0;
+        for (int i=0; i<list.size(); i++) {
+            Integer n = list.get(i);
+            System.out.println(n);
+            sum = sum + n;
+        }
+        return sum;
     }
 }
 
@@ -141,5 +190,52 @@ class IntPair extends Pair<Integer> {
 
     public IntPair(Class<Integer> clazz) throws IllegalAccessException, InstantiationException {
         super(clazz);
+    }
+}
+
+class Pair2<T> {
+    private T first;
+    private T last;
+    public Pair2(T first, T last) {
+        this.first = first;
+        this.last = last;
+    }
+    public T getFirst() {
+        return first;
+    }
+    public T getLast() {
+        return last;
+    }
+
+    public void setFirst(T first) {
+        this.first = first;
+    }
+
+    public void setLast(T last) {
+        this.last = last;
+    }
+}
+
+//定义泛型类型Pair<T>的时候，也可以使用extends通配符来限定T的类型
+class Pair3<T extends Number> {
+    private T first;
+    private T last;
+    public Pair3(T first, T last) {
+        this.first = first;
+        this.last = last;
+    }
+    public T getFirst() {
+        return first;
+    }
+    public T getLast() {
+        return last;
+    }
+
+    public void setFirst(T first) {
+        this.first = first;
+    }
+
+    public void setLast(T last) {
+        this.last = last;
     }
 }
