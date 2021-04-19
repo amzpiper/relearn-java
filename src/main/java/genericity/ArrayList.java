@@ -114,6 +114,47 @@ public class ArrayList<T> {
         //即一句话总结：使用extends通配符表示可以读，不能写。
         //使用类似<T extends Number>定义泛型类时表示：
         //  泛型类型限定为Number以及Number的子类。
+
+        //super
+        Pair3<Number> pp0 = new Pair3<Number>(12.3, 4.56);
+        set(pp0,1);
+        //方法参数接受所有泛型类型为Integer或Integer父类的Pair类型
+        Pair4<Number> pp1 = new Pair4<Number>(12.3, 4.56);
+        setSame(pp1,123);
+        Pair4<Integer> pp2 = new Pair4<Integer>(123, 456);
+        setSame(pp2,123);
+        System.out.println(pp1.getFirst() + ", " + pp1.getLast());
+        System.out.println(pp2.getFirst() + ", " + pp2.getLast());
+        Integer nn1 = (Integer) pp1.getFirst();
+        Integer nn2 = (Integer) pp1.getLast();
+        System.out.println(nn1 + ", " + nn2);
+
+        //copy
+        List list1 = new java.util.ArrayList<String>();
+        List list2 = new java.util.ArrayList<String>();
+        list2.add("123");
+        copy(list1,list2);
+        for (Object o : list1) {
+            System.out.println(o);
+        }
+        //copy()方法的另一个好处是可以安全地把一个List<Integer>添加到List<Number>
+        List list3 = new java.util.ArrayList<Number>();
+        List list4 = new java.util.ArrayList<Integer>();
+        list4.add(123);
+        copy(list3,list4);
+        for (Object o : list3) {
+            System.out.println(o);
+        }
+        //现在可以了
+        copy(list4,list3);
+        for (Object o : list4) {
+            System.out.println(o);
+        }
+
+        //<?>通配符有一个独特的特点，就是：Pair<?>是所有Pair<T>的超类：
+        Pair4<Integer> po1 = new Pair4<Integer>(123, 456);
+        Pair4<?> po2 = po1; // 安全地向上转型
+        System.out.println(po2.getFirst() + ", " + po2.getLast());
     }
 
     //对于静态方法，我们可以单独改写为“泛型”方法，只需要使用另一个类型即可。
@@ -141,6 +182,26 @@ public class ArrayList<T> {
             sum = sum + n;
         }
         return sum;
+    }
+    //Pair<? super Integer>表示，方法参数接受所有泛型类型为Integer或Integer父类的Pair类型
+    static void set(Pair3<? super Integer> p, Integer first) {
+        p.setFirst(first);
+    }
+    static void setSame(Pair4<? super Integer> p, Integer n) {
+        p.setFirst(n);
+        p.setLast(n);
+    }
+    //<? extends T>允许调用读方法T get()获取T的引用，但不允许调用写方法set(T)传入T的引用（传入null除外）
+    //<? super T>允许调用写方法set(T)传入T的引用，但不允许调用读方法T get()获取T的引用（获取Object除外）
+    //一个是允许读不允许写，另一个是允许写不允许读。
+    //copy()方法的另一个好处是可以安全地把一个List<Integer>添加到List<Number>
+    public static <T> void copy(List<? super T> dest, List<? extends T> src) {
+        for (int i=0; i<src.size(); i++) {
+            T t = src.get(i);
+            dest.add(t);
+            //T t = (T) dest.get(0); // compile error!
+            //src.add(t); // compile error!
+        }
     }
 }
 
@@ -224,6 +285,32 @@ class Pair3<T extends Number> {
         this.first = first;
         this.last = last;
     }
+
+    public T getFirst() {
+        return first;
+    }
+    public T getLast() {
+        return last;
+    }
+
+    public void setFirst(T first) {
+        this.first = first;
+    }
+
+    public void setLast(T last) {
+        this.last = last;
+    }
+}
+
+//super
+class Pair4<T> {
+    private T first;
+    private T last;
+    public Pair4(T first, T last) {
+        this.first = first;
+        this.last = last;
+    }
+
     public T getFirst() {
         return first;
     }
