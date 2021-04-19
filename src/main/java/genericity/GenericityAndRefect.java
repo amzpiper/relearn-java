@@ -20,7 +20,7 @@ public class GenericityAndRefect {
 
         //https://www.liaoxuefeng.com/wiki/1252599548343744/1265105940850016
         //必须借助Class<T>来创建泛型数组：
-        createArray(ps3);
+        //createArray(ps3);
 
         //可以利用可变参数创建泛型数组T[]
         //谨慎使用泛型可变参数
