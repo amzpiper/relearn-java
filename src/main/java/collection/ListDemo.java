@@ -1,6 +1,7 @@
 package collection;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ListDemo {
@@ -11,5 +12,35 @@ public class ListDemo {
         list.add("1");
         list.add("1");
         System.out.println(list.size());
+
+        //通过Iterator遍历List永远是最高效的方式。
+        //for each循环本身就可以帮我们使用Iterator遍历
+        //会自动把for each循环变成Iterator的调用
+        for (Iterator iterator = list.iterator(); iterator.hasNext(); ) {
+            String s = (String) iterator.next();
+            System.out.println(s);
+        }
+        //List.of()方法不接受null值，如果传入null，会抛出NullPointerException异常
+        //get(int)方法只有ArrayList的实现是高效的，换成LinkedList后，索引越大，访问速度越慢。
+
+        //List和Array转换
+        //第一种是调用toArray()方法直接返回一个Object[]数组
+        Object[] oArray = list.toArray();
+
+        //第二种方式是给toArray(T[])传入一个类型相同的Array，List内部自动把元素复制到传入的Array中
+        //如果传入的数组不够大，那么List内部会创建一个新的刚好够大的数组，填充后返回；如果传入的数组比List元素还要多，那么填充完元素后，剩下的数组元素一律填充null。
+        List<Integer> list3 = new ArrayList<Integer>();
+        Integer[] iArray = list3.toArray(new Integer[3]);
+        //最常用的是传入一个“恰好”大小的数组：
+        Integer[] iArray2 = list3.toArray(new Integer[list3.size()]);
+
+        //最后一种更简洁的写法是通过List接口定义的T[] toArray(IntFunction<T[]> generator)方法：
+        //Integer[] array = list3.toArray(Integer[]::new);
+        //调用List.of()，它返回的是一个只读List
+
+        //ist内部并不是通过==判断两个元素是否相等，而是使用equals()方法判断两个元素是否相等，
+        //例如contains()方法可以实现如下
+        System.out.println(list.contains("1"));
+
     }
 }
