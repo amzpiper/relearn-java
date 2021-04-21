@@ -52,6 +52,15 @@ public class MapDemo {
         System.out.println("map2:"+map2.get(new Person2("guoyuhang2", 24)));
         System.out.println("map2.containsKey:"+map2.containsKey(new Person2("guoyuhang2", 24)));
 
+        //HashMap初始化时默认的数组大小只有16
+        //频繁扩容对HashMap的性能影响很大
+        //虽然指定容量是10000，但HashMap内部的数组长度总是2n，因此，实际数组长度被初始化为比10000大的16384（214）。
+
+        //假设"a"和"b"这两个key最终计算出的索引都是5，那么，在HashMap的数组中，
+        //实际存储的不是一个Person实例，而是一个List，它包含两个Entry，一个是"a"的映射，一个是"b"的映射
+        //通过"a"找到的实际上是List<Entry<String, Person>>，它还需要遍历这个List，并找到一个Entry，它的key字段是"a"，
+        //才能返回对应的Person实例。
+        //不同的key具有相同的hashCode()的情况称之为哈希冲突。
     }
 }
 
