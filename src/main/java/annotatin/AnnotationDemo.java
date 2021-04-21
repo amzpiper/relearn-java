@@ -1,10 +1,7 @@
 package annotatin;
 
-import com.sun.istack.internal.NotNull;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -130,7 +127,7 @@ class Person {
         this.age = age;
     }
 
-    public void hello(@NotNull @Check(max=5) String name, @NotNull String prefix) {
+    public void hello(@Check(max=5) String name, String prefix) {
 
     }
 
