@@ -11,7 +11,7 @@ public class MapDemo {
     public static void main(String[] args) {
 
         //高效通过key快速查找value,不保证顺序
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<String, Integer>();
         map.put("apple", 123);
         map.put("pear", 123);
         System.out.println("map:"+map.get("pear"));

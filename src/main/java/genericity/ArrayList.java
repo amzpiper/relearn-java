@@ -36,7 +36,7 @@ public class ArrayList<T> {
         //2.静态方法，我们可以单独改写为“泛型”方法，只需要使用另一个类型即可。
 
         //3.多个泛型类型
-        PersonList<String, Integer> personList = new PersonList<>("guoyuhang", 25);
+        PersonList<String, Integer> personList = new PersonList<String, Integer>("guoyuhang", 25);
         System.out.println(personList.toString());
 
         //4.擦拭法
@@ -57,7 +57,7 @@ public class ArrayList<T> {
         //局限四：不能实例化T类型：擦拭后实际上变成了：first = new Object();
         //借助Class<T>参数并通过反射来实例化T类型，使用的时候，也必须传入Class<T>。例如：
         try {
-            Pair<String> pair = new Pair<>(String.class);
+            Pair<String> pair = new Pair<String>(String.class);
             pair.setFirst("guo");
             pair.setLast("yuhang");
             System.out.println(pair.getFirst()+pair.getLast());
