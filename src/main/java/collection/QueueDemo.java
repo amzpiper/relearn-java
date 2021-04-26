@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+//队列
 public class QueueDemo {
     public static void main(String[] args) {
         Queue<String> q = new LinkedList<String>();
@@ -43,7 +44,7 @@ public class QueueDemo {
         System.out.println(queue1.poll()); // Bob/A1
         System.out.println(queue1.poll()); // Alice/A2
         System.out.println(queue1.poll()); // null,因为队列为空
-        //上面的UserComparator的比较逻辑其实还是有问题的，它会把A10排在A2的前面，请尝试修复该错误。
+        //上面的UserComparator的比较逻辑其实还是有问题的，它会把A10排在A2的前面，请尝试修复该错误。g
     }
 }
 
