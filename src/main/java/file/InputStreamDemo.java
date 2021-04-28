@@ -66,5 +66,21 @@ public class InputStreamDemo {
                 System.out.println((char)n);
             }
         }
+
+        //把一个byte[]数组在内存中变成一个InputStream
+        try (InputStream inputStream1 = new ByteArrayInputStream(data)) {
+            String s = readAsString(inputStream1);
+            System.out.println("s:"+s);
+        }
+        //接受InputStream抽象类型，而不是具体的FileInputStream类型，从而使得代码可以处理InputStream的任意实现类
+    }
+
+    private static String readAsString(InputStream inputStream1) throws IOException {
+        int n;
+        StringBuilder sb = new StringBuilder();
+        while ((n = inputStream1.read()) != -1) {
+            sb.append(((char) n));
+        }
+        return sb.toString();
     }
 }
