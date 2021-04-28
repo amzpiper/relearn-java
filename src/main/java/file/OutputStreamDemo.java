@@ -1,6 +1,7 @@
 package file;
 
 import java.io.*;
+import java.math.BigDecimal;
 
 public class OutputStreamDemo {
     public static void main(String[] args) throws IOException {
@@ -38,5 +39,54 @@ public class OutputStreamDemo {
         try (InputStream input = new FileInputStream("");OutputStream output = new FileOutputStream("")){
             //input.transferTo(output); // transferTo的作用是?
         }
+        //上述这种通过一个“基础”组件再叠加各种“附加”功能组件的模式，称之为Filter模式（或者装饰器模式：Decorator）。
+        //它可以让我们通过少量的类来实现各种功能的组合：
+        //编写一个CountInputStream，它的作用是对输入的字节进行计数
+    }
+}
+
+/**
+ * 注意到在叠加多个FilterInputStream，我们只需要持有最外层的InputStream，
+ * 并且，当最外层的InputStream关闭时（在try(resource)块的结束处自动关闭），
+ * 内层的InputStream的close()方法也会被自动调用，并最终调用到最核心的“基础”InputStream，
+ * 因此不存在资源泄露。
+ */
+class CountInputSteam extends FilterInputStream{
+
+    private int count = 0;
+
+    /**
+     * Creates a <code>FilterInputStream</code>
+     * by assigning the  argument <code>in</code>
+     * to the field <code>this.in</code> so as
+     * to remember it for later use.
+     *
+     * @param in the underlying input stream, or <code>null</code> if
+     *           this instance is to be created without an underlying stream.
+     */
+    protected CountInputSteam(InputStream in) {
+        super(in);
+    }
+
+    public int getBytesRead() {
+        return this.count;
+    }
+
+    @Override
+    public int read() throws IOException {
+        int n = in.read();
+        if (n != -1) {
+            this.count++;
+        }
+        return n;
+    }
+
+    @Override
+    public int read(byte[] b, int off, int len) throws IOException {
+        int n = in.read(b, off, len);
+        if (n != -1) {
+            this.count++;
+        }
+        return n;
     }
 }
