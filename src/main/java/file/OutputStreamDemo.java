@@ -36,7 +36,7 @@ public class OutputStreamDemo {
         //此外，ByteArrayOutputStream可以在内存中模拟一个OutputStream：
 
         try (InputStream input = new FileInputStream("");OutputStream output = new FileOutputStream("")){
-            input.transferTo(output); // transferTo的作用是?
+            //input.transferTo(output); // transferTo的作用是?
         }
     }
 }
