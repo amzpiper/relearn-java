@@ -1,7 +1,6 @@
-package file;
+package io;
 
 import java.io.*;
-import java.math.BigDecimal;
 
 public class OutputStreamDemo {
     public static void main(String[] args) throws IOException {
