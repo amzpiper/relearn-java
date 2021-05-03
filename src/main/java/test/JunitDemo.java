@@ -1,10 +1,13 @@
 package test;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author guoyh
@@ -59,7 +62,7 @@ public class JunitDemo {
 
     Calculator calculator;
 
-    @Before
+    @BeforeEach
     public void setUpTest() {
         this.calculator = new Calculator();
     }
@@ -74,13 +77,67 @@ public class JunitDemo {
         assertEquals(0,this.calculator.sub(100));
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         this.calculator = null;
+    }
+
+    /**
+     * 针对可能导致异常的情况进行测试
+     * 我们不直接注释掉@Test，而是要加一个@Disabled？
+     * 这是因为注释掉@Test，JUnit就不知道这是个测试方法，而加上@Disabled，JUnit仍然识别出这是个测试方法，只是暂时不运行。
+     * 它会在测试结果中显示：
+     * Tests run: 68, Failures: 2, Errors: 0, Skipped: 5
+     */
+    @Disabled
+    @Test
+    public void testNagative() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Factorial.fact(-1);
+        });
+    }
+
+    Config config = new Config();
+
+    //@EnableOnOs就是一个条件测试判断
+    @Test
+    @EnabledOnOs(OS.WINDOWS)
+    public void testWindow() {
+        assertEquals("C:\\test.ini",config.getConfigFile("test.ini"));
+    }
+
+    @Test
+    @EnabledOnOs({OS.LINUX,OS.MAC})
+    public void testLinux() {
+        assertEquals("/usr/local/test.cfg",config.getConfigFile("test.cfg"));
+    }
+
+    //只能在Java 9或更高版本执行的测试，可以加上@DisabledOnJre(JRE.JAVA_8):
+    @Test
+    @DisabledOnJre(JRE.JAVA_8)
+    void testOnJava9OrAbove() {
+        // TODO: this test is disabled on java 8
+    }
+
+    //只能在64位操作系统上执行的测试，可以用@EnabledIfSystemProperty判断:
+    @Test
+    @EnabledIfSystemProperty(named = "os.arch", matches = ".*64.*")
+    void testOnlyOn64bitSystem() {
+        // TODO: this test is only run on 64 bit system
+    }
+
+    //需要传入环境变量DEBUG=true才能执行的测试，可以用@EnabledIfEnvironmentVariable:
+    @Test
+    @EnabledIfEnvironmentVariable(named = "DEBUG", matches = "true")
+    void testOnlyOnDebugMode() {
+        // TODO: this test is only run on DEBUG=true
     }
 }
 class Factorial {
     public static long fact(long n) {
+        if (n < 0) {
+            throw new IllegalArgumentException();
+        }
         long r = 1;
         for (long i = 1; i <= n; i++) {
             r = r * i;
@@ -99,5 +156,17 @@ class Calculator {
     public long sub(long x) {
         n = n - x;
         return n;
+    }
+}
+class Config {
+    public String getConfigFile(String filename) {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            return "C:\\" + filename;
+        }
+        if (os.contains("mac") || os.contains("linux") || os.contains("unix")) {
+            return "/usr/local/" + filename;
+        }
+        throw new UnsupportedOperationException();
     }
 }
