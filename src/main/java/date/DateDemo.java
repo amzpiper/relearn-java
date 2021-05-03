@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
+ * Java使用long型来表示以毫秒为单位的时间戳
  * @author guoyh
  */
 public class DateDemo {
