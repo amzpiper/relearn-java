@@ -1,5 +1,7 @@
 package test;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -47,6 +49,35 @@ public class JunitDemo {
         //指定一个误差值：
         assertEquals(0.1, Math.abs(1 - 9 / 10.0), 0.0000001);
     }
+
+    //JUnit提供了编写测试前准备、测试后清理的固定代码，我们称之为Fixture。
+    //junit4	    junit5	    特点
+    //@BeforeClass	@BeforeAll	在当前类的所有测试方法之前执行。注解在【静态方法】上。
+    //@AfterClass	@AfterAll	在当前类中的所有测试方法之后执行。注解在【静态方法】上。
+    //@Before	    @BeforeEach	在每个测试方法之前执行。注解在【非静态方法】上。
+    //@After	    @AfterEach	在每个测试方法之后执行。注解在【非静态方法】上。
+
+    Calculator calculator;
+
+    @Before
+    public void setUpTest() {
+        this.calculator = new Calculator();
+    }
+
+    @Test
+    public void testAdd() {
+        assertEquals(100,this.calculator.add(100));
+    }
+
+    @Test
+    public void testSub() {
+        assertEquals(0,this.calculator.sub(100));
+    }
+
+    @After
+    public void tearDown() {
+        this.calculator = null;
+    }
 }
 class Factorial {
     public static long fact(long n) {
@@ -55,5 +86,18 @@ class Factorial {
             r = r * i;
         }
         return r;
+    }
+}
+class Calculator {
+    private long n = 0;
+
+    public long add(long x) {
+        n = n + x;
+        return n;
+    }
+
+    public long sub(long x) {
+        n = n - x;
+        return n;
     }
 }
