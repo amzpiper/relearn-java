@@ -101,5 +101,10 @@ public class DateDemo {
         //Calendar也可以对日期和时间进行简单的加减：
         calendar.add(Calendar.YEAR,+2);
         System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(calendar.getTime()));
+
+        //Java有两套日期和时间的API：
+        //旧的Date、Calendar和TimeZone；
+        //新的LocalDateTime、ZonedDateTime、ZoneId等。
+        //分别位于java.util和java.time包中
     }
 }
