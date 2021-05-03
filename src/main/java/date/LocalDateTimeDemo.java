@@ -5,9 +5,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 
 /**
+ * LocalDateTime总是表示本地日期和时间
+ *
  * @author guoyh
  */
-public class LocalDateDemo {
+public class LocalDateTimeDemo {
     public static void main(String[] args) {
         //从Java 8开始，java.time包提供了新的日期和时间API，主要涉及的类型有：
         //本地日期和时间：LocalDateTime，LocalDate，LocalTime；
