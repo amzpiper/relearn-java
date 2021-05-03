@@ -5,6 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -71,12 +76,12 @@ public class JunitDemo {
 
     @Test
     public void testAdd() {
-        assertEquals(100,this.calculator.add(100));
+        assertEquals(100, this.calculator.add(100));
     }
 
     @Test
     public void testSub() {
-        assertEquals(0,this.calculator.sub(100));
+        assertEquals(0, this.calculator.sub(100));
     }
 
     @AfterEach
@@ -107,13 +112,13 @@ public class JunitDemo {
     @Test
     @EnabledOnOs(OS.WINDOWS)
     public void testWindow() {
-        assertEquals("C:\\test.ini",config.getConfigFile("test.ini"));
+        assertEquals("C:\\test.ini", config.getConfigFile("test.ini"));
     }
 
     @Test
-    @EnabledOnOs({OS.LINUX,OS.MAC})
+    @EnabledOnOs({OS.LINUX, OS.MAC})
     public void testLinux() {
-        assertEquals("/usr/local/test.cfg",config.getConfigFile("test.cfg"));
+        assertEquals("/usr/local/test.cfg", config.getConfigFile("test.cfg"));
     }
 
     //只能在Java 9或更高版本执行的测试，可以加上@DisabledOnJre(JRE.JAVA_8):
@@ -137,7 +142,55 @@ public class JunitDemo {
         // TODO: this test is only run on DEBUG=true
     }
 
+    //参数化测试
+    //如果待测试的输入和输出是一组数据： 可以把测试数据组织起来 用不同的测试数据调用相同的测试方法
+    //参数化测试和普通测试稍微不同的地方在于，一个测试方法需要接收至少一个参数，然后，传入一组参数反复运行。
+    //JUnit提供了一个@ParameterizedTest注解，用来进行参数化测试。
+    //假设我们想对Math.abs()进行测试，先用一组正数进行测试:
 
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 5, 100})
+    public void testAbs(int x) {
+        assertEquals(x, Math.abs(x));
+    }
+
+    //测试场景往往没有这么简单。假设我们自己编写了一个StringUtils.capitalize()方法，它会把字符串的第一个字母变为大写，后续字母变为小写:
+
+    /**
+     * 我们不但要给出输入，还要给出预期输出。因此，测试方法至少需要接收两个参数:
+     * 最简单的方法是通过@MethodSource注解，它允许我们编写一个同名的静态方法来提供测试参数:
+     * 如果静态方法和测试方法的名称不同，@MethodSource也允许指定方法名。但使用默认同名方法最方便。
+     */
+    @ParameterizedTest
+    @MethodSource
+    void testCapitalize(String input, String result) {
+        assertEquals(result, StringUtils.capitalize(input));
+    }
+
+    static List<Arguments> testCapitalize() {
+        List<Arguments> list = new ArrayList<Arguments>();
+        list.add(Arguments.arguments("abc", "Abc"));
+        return list;
+    }
+
+    /**
+     * 另一种传入测试参数的方法是使用@CsvSource，它的每一个字符串表示一行，一行包含的若干参数用,分隔
+     */
+    @ParameterizedTest
+    @CsvSource({"abc,Abc", "APPLE,Apple"})
+    void testCapitalize2(String input, String result) {
+        assertEquals(result, StringUtils.capitalize(input));
+    }
+
+    /**
+     * 如果有成百上千的测试输入，那么，直接写@CsvSource就很不方便。
+     * 这个时候，我们可以把测试数据提到一个独立的CSV文件中，然后标注上@CsvFileSource：
+     */
+    @ParameterizedTest
+    @CsvFileSource(resources = {"/test-capitalize.csv"})
+    void testCsvFileSource(String input, String result) {
+        assertEquals(result, StringUtils.capitalize(input));
+    }
 }
 class Factorial {
     public static long fact(long n) {
@@ -174,5 +227,13 @@ class Config {
             return "/usr/local/" + filename;
         }
         throw new UnsupportedOperationException();
+    }
+}
+class StringUtils {
+    public static String capitalize(String s) {
+        if (s.length() == 0) {
+            return s;
+        }
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
     }
 }
