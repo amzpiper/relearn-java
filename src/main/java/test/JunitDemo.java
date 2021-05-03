@@ -60,6 +60,8 @@ public class JunitDemo {
     //@Before	    @BeforeEach	在每个测试方法之前执行。注解在【非静态方法】上。
     //@After	    @AfterEach	在每个测试方法之后执行。注解在【非静态方法】上。
 
+    //测试前后操作
+
     Calculator calculator;
 
     @BeforeEach
@@ -83,6 +85,7 @@ public class JunitDemo {
     }
 
     /**
+     * 异常测试
      * 针对可能导致异常的情况进行测试
      * 我们不直接注释掉@Test，而是要加一个@Disabled？
      * 这是因为注释掉@Test，JUnit就不知道这是个测试方法，而加上@Disabled，JUnit仍然识别出这是个测试方法，只是暂时不运行。
@@ -97,6 +100,7 @@ public class JunitDemo {
         });
     }
 
+    //条件测试
     Config config = new Config();
 
     //@EnableOnOs就是一个条件测试判断
@@ -132,6 +136,8 @@ public class JunitDemo {
     void testOnlyOnDebugMode() {
         // TODO: this test is only run on DEBUG=true
     }
+
+
 }
 class Factorial {
     public static long fact(long n) {
