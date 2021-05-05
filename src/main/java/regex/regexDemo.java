@@ -1,5 +1,6 @@
 package regex;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -146,6 +147,53 @@ public class regexDemo {
         //反复使用String.matches()对同一个正则表达式进行多次匹配效率较低，因为每次都会创建出一样的Pattern对象。
         //完全可以先创建出一个Pattern对象，然后反复使用，就可以实现编译一次，多次匹配
         //必须首先调用matches()判断是否匹配成功，匹配成功后，才能调用group()提取子串
+
+        //判断该数字末尾0的个数。例如：
+        //"123000"：3个0
+        //"10100"：2个0
+        //"1001"：0个0
+        //可以很容易地写出该正则表达式：(\d+)(0*)
+        //然而打印的第二个子串是空字符串"",matcher.group(2)
+        //这是因为正则表达式默认使用贪婪匹配：任何一个规则，它总是尽可能多地向后匹配，因此，\d+总是会把后面的0包含进来。
+        //要让\d+尽量少匹配，让0*尽量多匹配，我们就必须让\d+使用非贪婪匹配。在规则\d+后面加个?即可表示非贪婪匹配
+        regex = "(\\d+?)(0*)";
+        Pattern pattern1 = Pattern.compile(regex);
+        Matcher matcher1 = pattern1.matcher("1230000");
+        if (matcher1.matches()) {
+            System.out.println(matcher.group(1));
+            System.out.println(matcher.group(2));
+        }
+
+        //我们再来看这个正则表达式(\d??)(9*)，注意\d?表示匹配0个或1个数字，后面第二个?表示非贪婪匹配，
+        //因此，给定字符串"9999"，匹配到的两个子串分别是""和"9999"，因为对于\d?来说，可以匹配1个9，也可以匹配0个9，
+        //但是因为后面的?表示非贪婪匹配，它就会尽可能少的匹配，结果是匹配了0个9。
+
+        //分割字符串
+        //String.split()方法传入的正是正则表达式
+        System.out.println(Arrays.toString("a b c".split("\\s")));
+        System.out.println(Arrays.toString("a, b ;; c".split("[\\,|\\;|\\s]+")));
+
+        //搜索字符串
+        //这种方式比String.indexOf()要灵活得多
+        String s = "the quick brown fox jumps over the lazy dog.";
+        Pattern pattern2 = Pattern.compile("\\wo\\w");
+        Matcher matcher2 = pattern2.matcher(s);
+        while (matcher2.find()) {
+            System.out.println(s.substring(matcher2.start(),matcher2.end()));
+        }
+
+        //替换字符串
+        //使用正则表达式替换字符串可以直接调用String.replaceAll()，它的第一个参数是正则表达式，第二个参数是待替换的字符串
+        s = "The     quick\t\t brown   fox  jumps   over the  lazy dog.";
+        String r = s.replaceAll("\\s+", " ");
+        System.out.println(r);
+
+        //反向引用
+        //如果我们要把搜索到的指定字符串按规则替换，比如前后各加一个<b>xxxx</b>，
+        //这个时候，使用replaceAll()的时候，我们传入的第二个参数可以使用$1、$2来反向引用匹配到的子串
+        r = r.replaceAll("\\s([a-z]{4})\\s", " <b>$1</b> ");
+        System.out.println(r);
+
     }
 
     static boolean isValidMobileNumber(String s) {
