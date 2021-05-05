@@ -51,5 +51,11 @@
       <artifactId>junit-jupiter-params</artifactId>
       <version>5.7.1</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk16 -->
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk16</artifactId>
+      <version>1.46</version>
+    </dependency>
   </dependencies>
 </project>
