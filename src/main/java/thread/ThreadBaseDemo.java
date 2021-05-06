@@ -4,7 +4,7 @@ package thread;
  * @author guoyh
  */
 public class ThreadBaseDemo {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         //现代操作系统（Windows，macOS，Linux）都可以执行多任务。多任务就是同时运行多个任务，例如：
         //CPU执行代码都是一条一条顺序执行的，但是，即使是单核cpu，也可以同时运行多个任务。
         //因为操作系统执行多任务实际上就是让CPU对多个任务轮流交替执行。
@@ -66,6 +66,7 @@ public class ThreadBaseDemo {
                 System.out.println("Start new Thread 2");
             }
         });
+        t2.setPriority(1);
         t2.start();
         //用Java8引入的lambda语法进一步简写为：
         //Thread t2 = new Thread(() -> {
@@ -73,7 +74,32 @@ public class ThreadBaseDemo {
         //});
         //并且由操作系统调度，程序本身无法确定线程的调度顺序。
 
+        //一个线程对象只能调用一次start()方法启动新线程
+        //一旦run()方法执行完毕，线程就结束了。因此，Java线程的状态有以下几种:
+        //1.New：新创建的线程，尚未执行；
+        //2.Runnable：运行中的线程，正在执行run()方法的Java代码；
+        //2.Blocked：运行中的线程，因为某些操作被阻塞而挂起；
+        //2.Waiting：运行中的线程，因为某些操作在等待中；
+        //2.Timed Waiting：运行中的线程，因为执行sleep()方法正在计时等待；
+        //3.Terminated：线程已终止，因为run()方法执行完毕。
 
+        //线程终止的原因有：
+        //线程正常终止：run()方法执行到return语句返回；
+        //线程意外终止：run()方法因为未捕获的异常导致线程终止；
+        //对某个线程的Thread实例调用stop()方法强制终止（强烈不推荐使用）。
+
+        Thread t3 = new Thread(()->{
+            System.out.println("");
+        });
+        System.out.println("start");
+        t3.start();
+        t3.join();
+        System.out.println("end");
+        //当main线程对线程对象t调用join()方法时，主线程将等待变量t表示的线程运行结束，
+        //即join就是指等待该线程结束，然后才继续往下执行自身线程。
+        //所以，上述代码打印顺序可以肯定是main线程先打印start，t线程再打印hello，main线程最后再打印end。
+        //如果t线程已经结束，对实例t调用join()会立刻返回。
+        //此外，join(long)的重载方法也可以指定一个等待时间，超过等待时间后就不再继续等待。
     }
 }
 
