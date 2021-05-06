@@ -67,6 +67,13 @@ public class ThreadBaseDemo {
             }
         });
         t2.start();
+        //用Java8引入的lambda语法进一步简写为：
+        //Thread t2 = new Thread(() -> {
+        //    System.out.println("start new thread!");
+        //});
+        //并且由操作系统调度，程序本身无法确定线程的调度顺序。
+
+
     }
 }
 
