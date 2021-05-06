@@ -50,5 +50,10 @@ public class ThreadBaseDemo {
         //多线程模型是Java程序最基本的并发模型；
         //后续读写网络、数据库、Web开发等都依赖Java多线程模型。
         //因此，必须掌握Java多线程编程才能继续深入学习其他内容。
+
+        //创建新线程
+        Thread t = new Thread();
+        t.start();
+
     }
 }
