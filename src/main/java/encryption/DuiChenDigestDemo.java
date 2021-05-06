@@ -42,12 +42,13 @@ public class DuiChenDigestDemo {
         // 解密:
         byte[] decrypted = decrypt(key, encrypted);
         System.out.println("Decrypted: " + new String(decrypted, "UTF-8"));
+
         //Java标准库提供的对称加密接口非常简单，使用时按以下步骤编写代码：
-        //
         //根据算法名称/工作模式/填充模式获取Cipher实例；
         //根据算法名称初始化一个SecretKey实例，密钥必须是指定长度；
         //使用SerectKey初始化Cipher实例，并设置加密或解密模式；
         //传入明文或密文，获得密文或明文。
+
         //ECB模式是最简单的AES加密模式，它只需要一个固定长度的密钥，固定的明文会生成固定的密文，这种一对一的加密方式会导致安全性降低，
         //更好的方式是通过CBC模式，它需要一个随机数作为IV参数，这样对于同一份明文，每次生成的密文都不同：
         // 原文:
