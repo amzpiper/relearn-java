@@ -54,6 +54,28 @@ public class ThreadBaseDemo {
         //创建新线程
         Thread t = new Thread();
         t.start();
+        //我们希望新线程能执行指定的代码，有以下几种方法：
+        //方法一：从Thread派生一个自定义类，然后覆写run()方法：
+        //注意到start()方法会在内部自动调用实例的run()方法。
+        Thread t1 = new MyThread();
+        t1.start();
+        //方法二：创建Thread实例时，传入一个Runnable实例：
+        Thread t2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Start new Thread 2");
+            }
+        });
+        t2.start();
+    }
+}
 
+/**
+ * 方法一：从Thread派生一个自定义类，然后覆写run()方法：
+ */
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        System.out.println("Start new Thread 1");
     }
 }
