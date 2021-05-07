@@ -100,6 +100,27 @@ public class ThreadBaseDemo {
         //所以，上述代码打印顺序可以肯定是main线程先打印start，t线程再打印hello，main线程最后再打印end。
         //如果t线程已经结束，对实例t调用join()会立刻返回。
         //此外，join(long)的重载方法也可以指定一个等待时间，超过等待时间后就不再继续等待。
+
+        //需要执行一个长时间任务，就可能需要能中断线程。
+        //中断线程就是其他线程给该线程发一个信号，该线程收到信号后结束执行run()方法，使得自身线程能立刻结束运行
+        //假设从网络下载一个100M的文件，如果网速很慢，用户等得不耐烦，就可能在下载过程中点“取消”，
+        //这时，程序就需要中断下载线程的执行。
+        //中断一个线程非常简单，只需要在其他线程中对目标线程调用interrupt()方法，
+        //目标线程需要反复检测自身状态是否是interrupted状态，如果是，就立刻结束运行。
+        Thread thread = new MyThread2();
+        thread.start();
+        Thread.sleep(1);
+        thread.interrupt();
+        thread.join();
+        System.out.println("end");
+        //要注意，interrupt()方法仅仅向t线程发出了“中断请求”，至于t线程是否能立刻响应，要看具体代码。
+        //而t线程的while循环会检测isInterrupted()，所以上述代码能正确响应interrupt()请求，
+        //使得自身立刻结束运行run()方法。
+        //如果线程处于等待状态，例如，t.join()会让main线程进入等待状态，
+        //此时，如果对main线程调用interrupt()，join()方法会立刻抛出InterruptedException，
+        //因此，目标线程只要捕获到join()方法抛出的InterruptedException，
+        //就说明有其他线程对其调用了interrupt()方法，通常情况下该线程应该立刻结束运行。
+
     }
 }
 
@@ -110,5 +131,19 @@ class MyThread extends Thread {
     @Override
     public void run() {
         System.out.println("Start new Thread 1");
+    }
+}
+
+/**
+ *
+ */
+class MyThread2 extends Thread {
+    @Override
+    public void run() {
+        int n = 0;
+        while (!isInterrupted()) {
+            n++;
+            System.out.println(n + "hello");
+        }
     }
 }
