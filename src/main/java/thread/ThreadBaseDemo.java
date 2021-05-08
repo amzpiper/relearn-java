@@ -1,5 +1,7 @@
 package thread;
 
+import java.time.LocalTime;
+
 /**
  * @author guoyh
  */
@@ -101,6 +103,7 @@ public class ThreadBaseDemo {
         //如果t线程已经结束，对实例t调用join()会立刻返回。
         //此外，join(long)的重载方法也可以指定一个等待时间，超过等待时间后就不再继续等待。
 
+        //中断线程
         //需要执行一个长时间任务，就可能需要能中断线程。
         //中断线程就是其他线程给该线程发一个信号，该线程收到信号后结束执行run()方法，使得自身线程能立刻结束运行
         //假设从网络下载一个100M的文件，如果网速很慢，用户等得不耐烦，就可能在下载过程中点“取消”，
@@ -113,6 +116,7 @@ public class ThreadBaseDemo {
         thread.interrupt();
         thread.join();
         System.out.println("end");
+
         //要注意，interrupt()方法仅仅向t线程发出了“中断请求”，至于t线程是否能立刻响应，要看具体代码。
         //而t线程的while循环会检测isInterrupted()，所以上述代码能正确响应interrupt()请求，
         //使得自身立刻结束运行run()方法。
@@ -120,7 +124,42 @@ public class ThreadBaseDemo {
         //此时，如果对main线程调用interrupt()，join()方法会立刻抛出InterruptedException，
         //因此，目标线程只要捕获到join()方法抛出的InterruptedException，
         //就说明有其他线程对其调用了interrupt()方法，通常情况下该线程应该立刻结束运行。
+        Thread thread1 = new MyThread3();
+        thread1.start();
+        Thread.sleep(100);
+        thread1.interrupt();
+        thread1.join();
+        System.out.println("MyThread3 end");
 
+        //另一个常用的中断线程的方法是设置标志位。我们通常会用一个running标志位来标识线程是否应该继续运行，
+        //在外部线程中，通过把HelloThread.running置为false，就可以让线程结束：
+        MyThread4 thread2 = new MyThread4();
+        thread2.start();
+        System.out.println("start MyThread4");
+        Thread.sleep(1);
+        thread2.running = false;
+        //注意到HelloThread的标志位boolean running是一个线程间共享的变量。线程间共享变量需要使用volatile关键字标记，确保每个线程都能读取到更新后的变量值
+        //volatile关键字的目的是告诉虚拟机：
+        //每次访问变量时，总是获取主内存的最新值；
+        //每次修改变量后，立刻回写到主内存。
+        //volatile关键字解决的是可见性问题：当一个线程修改了某个共享变量的值，其他线程能够立刻看到修改后的值。
+        //如果我们去掉volatile关键字，运行上述程序，发现效果和带volatile差不多，
+        //这是因为在x86的架构下，JVM回写主内存的速度非常快，但是，换成ARM的架构，就会有显著的延迟。
+
+        //守护线程
+        //如果这个线程不结束，JVM进程就无法结束。问题是，由谁负责结束这个线程？
+        //然而这类线程经常没有负责人来负责结束它们。但是，当其他线程结束时，JVM进程又必须要结束，怎么办？
+        //答案是使用守护线程（Daemon Thread）。
+        //守护线程是指为其他线程服务的线程。在JVM中，所有非守护线程都执行完毕后，无论有没有守护线程，虚拟机都会自动退出。
+        //因此，JVM退出时，不必关心守护线程是否已结束。
+        //如何创建守护线程呢？方法和普通线程一样，只是在调用start()方法前，调用setDaemon(true)把该线程标记为守护线程：
+        TimerThread timerThread = new TimerThread();
+        timerThread.setDaemon(true);
+        timerThread.start();
+        //守护线程是为其他线程服务的线程；
+        //所有非守护线程都执行完毕后，虚拟机退出；
+        //守护线程不能持有需要关闭的资源（如打开文件等）。
+        Thread.sleep(100);
     }
 }
 
@@ -144,6 +183,59 @@ class MyThread2 extends Thread {
         while (!isInterrupted()) {
             n++;
             System.out.println(n + "hello");
+        }
+    }
+}
+
+/**
+ * t.join()会让main线程进入等待状态，此时，如果对main线程调用interrupt()，join()方法会立刻抛出InterruptedException
+ */
+class MyThread3 extends Thread {
+    @Override
+    public void run() {
+        Thread hello = new MyThread2();
+        hello.start();
+        try {
+            hello.join();
+        } catch (InterruptedException e) {
+            //由于我们在t线程中捕获了InterruptedException，因此，就可以准备结束该线程。
+            //在t线程结束前，对hello线程也进行了interrupt()调用通知其中断。如果去掉这一行代码，
+            //可以发现hello线程仍然会继续运行，且JVM不会退出。
+            System.out.println("interrupted! hello");
+            hello.interrupt();
+        }
+    }
+}
+
+/**
+ * 设置标志位用来中断线程
+ */
+class MyThread4 extends Thread {
+    public volatile boolean running = true;
+    @Override
+    public void run() {
+        int n = 0;
+        while (running) {
+            n++;
+            System.out.println(n);
+        }
+        System.out.println("MyThread4 end");
+    }
+}
+
+/**
+ * 守护线程
+ */
+class TimerThread extends Thread {
+    @Override
+    public void run() {
+        while (true) {
+            System.out.println("守护线程:" + LocalTime.now());
+            try {
+                Thread.sleep(0);
+            } catch (InterruptedException e) {
+                break;
+            }
         }
     }
 }
