@@ -31,7 +31,7 @@ public class ConditionDemo {
         //} else {
         //    // 指定时间内没有被其他线程唤醒
         //}
-        //可见，使用Condition配合Lock，我们可以实现更灵活的线程同步。
+        //可见，使用Condition配合Lock，我们可以实现更灵活的线程同步.
     }
 }
 
