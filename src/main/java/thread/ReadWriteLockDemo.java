@@ -30,7 +30,7 @@ public class ReadWriteLockDemo {
         //ReadWriteLock只允许一个线程写入；
         //ReadWriteLock允许多个线程在没有写入时同时读取；
         //ReadWriteLock适合读多写少的场景。
-        //锁的目的不是读的数据是错的，是保证连续读逻辑上一致的：
+        //锁的目的不是读的数据是错的，是保证连续读逻辑上一致的;
     }
 }
 
