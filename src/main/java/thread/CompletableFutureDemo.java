@@ -91,6 +91,12 @@ public class CompletableFutureDemo {
         });
         // 主线程不要立刻结束，否则CompletableFuture默认使用的线程池会立刻关闭:
         Thread.sleep(200);
+
+        //除了anyOf()可以实现“任意个CompletableFuture只要一个成功”，
+        //allOf()可以实现“所有CompletableFuture都必须成功”，这些组合操作可以实现非常复杂的异步流程控制。
+        //最后我们注意CompletableFuture的命名规则：
+        //xxx()：表示该方法将继续在已有的线程中执行；
+        //xxxAsync()：表示将异步在线程池中执行。
     }
 
     private static Double fetchPrice() {
