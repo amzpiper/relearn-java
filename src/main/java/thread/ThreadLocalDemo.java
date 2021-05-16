@@ -1,6 +1,5 @@
 package thread;
 
-import collection.User;
 
 /**
  * @author DELL
