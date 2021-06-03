@@ -16,8 +16,14 @@ public class SingletonPatternDemo {
 
         //获取唯一可用的对象
         SingleObject object = SingleObject.getInstance();
+        object.setNumber(1);
+        System.out.println(object.getNumber());
+        
         SingleObject object2 = SingleObject.getInstance2();
+        object2.setNumber(2);
+        System.out.println(object.getNumber());
 
+        System.out.println(object == object2);
         //显示消息
         object.showMessage();
     }

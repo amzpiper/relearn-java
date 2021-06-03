@@ -5,7 +5,7 @@
 >https://www.runoob.com/design-pattern/proxy-pattern.html
 
 ## 1、单例模式(Singleton Pattern)
-```
+``` 
 实现方式：
     a) 将被实现的类的构造方法设计成private的。
     b) 添加此类引用的静态成员变量，并为其实例化。

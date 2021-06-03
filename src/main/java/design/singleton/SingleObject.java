@@ -11,9 +11,9 @@ public class SingleObject {
 
     //创建 SingleObject 的一个对象
     //饿汉式
-    private static final SingleObject INSTANCE = new SingleObject();
-    private static SingleObject INSTANCE2;
-
+    private static SingleObject INSTANCE = new SingleObject();
+    private int number;
+    
     /**
      * 让构造函数为 private，这样该类就不会被实例化
      */
@@ -21,8 +21,8 @@ public class SingleObject {
     }
 
     /**
+     * 方式一、饿汉式
      * 获取唯一可用的对象
-     * 饿汉式
      *
      * @return SingleObject
      */
@@ -37,15 +37,23 @@ public class SingleObject {
      * @return SingleObject
      */
     public static SingleObject getInstance2() {
-        if (INSTANCE2 == null) {
-            INSTANCE2 = new SingleObject();
-            return INSTANCE2;
+        if (INSTANCE == null) {
+            INSTANCE = new SingleObject();
+            return INSTANCE;
         }else {
-            return INSTANCE2;
+            return INSTANCE;
         }
     }
 
     public void showMessage(){
         System.out.println("Hello World!");
+    }
+
+    public void setNumber(int n){
+        this.number = n;
+    }
+    
+    public int getNumber(){
+        return this.number;
     }
 }
