@@ -1,4 +1,4 @@
-package design.thread;
+package design.proxy.statics.thread;
 
 public class MyThread implements Runnable {
     public static void main(String[] args) {
