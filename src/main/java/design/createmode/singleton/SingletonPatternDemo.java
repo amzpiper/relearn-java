@@ -26,5 +26,6 @@ public class SingletonPatternDemo {
         System.out.println(object == object2);
         //显示消息
         object.showMessage();
+        
     }
 }

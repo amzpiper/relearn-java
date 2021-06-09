@@ -33,10 +33,12 @@ public class SingleObject {
     /**
      * 获取唯一可用的对象
      * 懒汉式
-     *
+     * 可能听说过延迟加载，即在调用方第一次调用getInstance()时才初始化全局唯一实例
+     * 这种写法在多线程中是错误的，在竞争条件下会创建出多个实例。必须对整个方法进行加锁：
+     * 加锁会严重影响并发性能。还有些童鞋听说过双重检查
      * @return SingleObject
      */
-    public static SingleObject getInstance2() {
+    public synchronized static SingleObject getInstance2() {
         if (INSTANCE == null) {
             INSTANCE = new SingleObject();
             return INSTANCE;
