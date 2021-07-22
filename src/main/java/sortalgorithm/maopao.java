@@ -1,4 +1,4 @@
-package sort;
+package sortalgorithm;
 
 /**
  * 平均时间复杂度：O(n²)

@@ -1,4 +1,4 @@
-package sort;
+package sortalgorithm;
 
 /**
  * 无论什么数据进去都是 O(n²) 的时间复杂度
