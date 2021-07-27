@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * @author guoyh
  */
-public class regexDemo {
+public class RegexDemo {
     public static void main(String[] args) {
         System.out.println(isValidMobileNumber("15512702732"));
 

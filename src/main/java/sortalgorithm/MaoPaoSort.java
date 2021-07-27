@@ -1,6 +1,11 @@
 package sortalgorithm;
 
 /**
+ * 冒泡排序：
+ * 
+ * 冒泡排序还有一种优化算法，就是立一个 flag，当在一趟序列遍历中元素没有发生交换，则证明该序列已经有序。但这种改进对于提升性能来
+ * 说并没有什么太大作用
+ * 
  * 平均时间复杂度：O(n²)
  * 最好情况时间复杂度：O(n)
  * 最快情况时间复杂度：O(n²) 
@@ -12,7 +17,7 @@ package sortalgorithm;
  * 针对所有的元素重复以上的步骤，除了最后一个。
  * 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较
  */
-public class maopao {
+public class MaoPaoSort {
      public static void main(String[] args) {
         int[] array = {78,69,55,43,31,20,10};
         sortMaopao(array);

@@ -13,7 +13,7 @@ import java.util.TreeSet;
  * 限制：
  * 1 <= s 的长度 <= 8
  */
-public class offer38 {
+public class Offer38 {
     public static void main(String[] args) {
         String[] s = permutation("abc");
         System.out.println(s);
