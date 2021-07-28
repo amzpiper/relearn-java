@@ -61,7 +61,7 @@ public class XiErSort {
                 //保存插入值
                 int j = i;
                 int temp = arr[j];
-                System.out.println("j:"+j+",temp ==> " + temp);
+                System.out.println("j:"+j+"和j-gap:"+(j - gap)+",temp ==> " + temp);
                 
                 //如果后一个小于前一个,后一个往前移动
                 if(arr[j] < arr[j-gap]){

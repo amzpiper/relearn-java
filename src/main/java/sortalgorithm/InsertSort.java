@@ -40,7 +40,8 @@ public class InsertSort {
             int j = i;
             while(j > 0 && temp < arr[j-1]){
                 System.out.println(j + "<==>" + (j-1));
-
+                
+                //大的向后移动
                 arr[j] = arr[j-1];
                 j--;
                 
@@ -50,11 +51,11 @@ public class InsertSort {
                 System.out.println();
             }
 
-            //insert temp
             //why j != i
+            //插入小的值
             if(j != i){
                 arr[j] = temp;
-
+                
                 for (int item : arr) {
                     System.out.print(item + " ");
                 }
