@@ -50,12 +50,45 @@ public class XiErSort {
     public static void sortXiEr(int[] array){
         int[] arr = Arrays.clone(array);
 
-        //增量gap,并逐步缩小增量
-        for (int gap = 0; gap > 0; gap/=2) {
+        //增量gap,并逐步缩小增量,直到gap = 1
+        for (int gap = arr.length/2; gap > 0; gap/=2) {
+            
+            System.out.println("gap：" + "" + gap);
 
-            
-            
+            //从第gap个元素，逐个对其所在组进行直接插入排序操作
+            for (int i = gap; i < arr.length; i++) {
+                
+                //保存插入值
+                int j = i;
+                int temp = arr[j];
+                System.out.println("j:"+j+",temp ==> " + temp);
+                
+                //如果后一个小于前一个,后一个往前移动
+                if(arr[j] < arr[j-gap]){
+                    System.out.println(j + "<" + (j - gap));
+                    
+                    //大的向后移动
+                    arr[j] = arr[j-gap];
+                    //移动下标到下一个,如果是2个一组,则为移动到下一组
+                    j = j - gap;
+
+                    for (int item : arr) {
+                        System.out.print(item + " ");
+                    }
+                    System.out.println();
+                }
+                //把最小值插入到前面
+                arr[j] = temp;
+
+                for (int item : arr) {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
+            }
+
+            System.out.println();
         }
+
     }
 
 }
