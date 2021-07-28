@@ -1,5 +1,7 @@
 package sortalgorithm;
 
+import java.util.Arrays;
+
 /**
  * 插入排序：
  * 
@@ -19,10 +21,45 @@ package sortalgorithm;
 public class InsertSort {
     
     public static void main(String[] args) {
-        int[] array = {78,69,55,43,31,20,10};
+        int[] array = {78,69,55,43,55,31,20,10};
         sortInsert(array);
     }
     public static void sortInsert(int[] array){
-        
+        int[] arr = Arrays.copyOf(array, array.length);
+
+        //从下标为1的元素开始选择合适的位置插入，因为下表为0的只有1个元素，默认是有序的
+        for (int i = 1; i < arr.length; i++) {
+
+            //保存要插入的值
+            int temp = arr[i];
+            System.out.println("第"+(i)+"轮：" + "交换" + temp + "");
+
+            //从已经排序的最右侧开始比较并向后移动，找到比要插入的值小的数的下标，把要插入的值插入到他前方
+            //i为排序和未排序的分界线
+            int j = i;
+            while(j > 0 && temp < arr[j-1]){
+                System.out.println(j + "<==>" + (j-1));
+
+                arr[j] = arr[j-1];
+                j--;
+                
+                for (int item : arr) {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
+            }
+
+            //insert temp
+            //why j != i
+            if(j != i){
+                arr[j] = temp;
+
+                for (int item : arr) {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
+            }
+
+        }
     }
 }
