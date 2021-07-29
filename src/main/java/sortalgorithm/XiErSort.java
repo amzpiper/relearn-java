@@ -51,7 +51,7 @@ public class XiErSort {
     public static void sortXiEr(int[] array){
         int[] arr = Arrays.copyOf(array,array.length);
 
-        //增量gap,并逐步缩小增量,直到gap = 1
+        //希尔增量gap,并逐步缩小增量,直到gap = 1
         for (int gap = arr.length/2; gap > 0; gap/=2) {
             
             //从第gap个元素，逐个对其所在组进行直接插入排序操作
