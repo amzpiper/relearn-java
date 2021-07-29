@@ -63,7 +63,7 @@ public class XiErSort {
                 //保存该组里第一个位置的值作为插入值
                 int temp = arr[i];
                 int j = i-gap;
-                //如果后一个小,大的向后移动
+                //在当前组中,如果后一个小,大的向后移动
                 while(j >= 0 && arr[j]>temp){
                     System.out.println("move:"+(j+gap) + "=" + j);
 
