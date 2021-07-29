@@ -1,6 +1,6 @@
 package sortalgorithm;
 
-import org.bouncycastle.util.Arrays;
+import java.util.Arrays;
 
 /**
  * 希尔排序：
@@ -39,56 +39,78 @@ import org.bouncycastle.util.Arrays;
  */
 public class XiErSort {
     public static void main(String[] args) {
-        int[] array = {78,69,55,43,56,31,20,10,54,32,26,12};
+        int[] array = {8,9,1,7,2,3,5,4,6,0};
         sortXiEr(array);
     }
 
     /**
      * 希尔排序 针对有序序列在插入时采用移动法(类似插入排序的移动)。
+     * 升序
      * @param array
      */
     public static void sortXiEr(int[] array){
-        int[] arr = Arrays.clone(array);
+        int[] arr = Arrays.copyOf(array,array.length);
 
         //增量gap,并逐步缩小增量,直到gap = 1
         for (int gap = arr.length/2; gap > 0; gap/=2) {
             
-            System.out.println("gap：" + "" + gap);
-
             //从第gap个元素，逐个对其所在组进行直接插入排序操作
+            System.out.println("gap：" + "" + gap);
             for (int i = gap; i < arr.length; i++) {
+                System.out.println("--------------------------");
+                for (int item : arr) {System.out.print(item + " ");}System.out.println();
                 
-                //保存插入值
-                int j = i;
-                int temp = arr[j];
-                System.out.println("j:"+j+"和j-gap:"+(j - gap)+",temp ==> " + temp);
-                
-                //如果后一个小于前一个,后一个往前移动
-                if(arr[j] < arr[j-gap]){
-                    System.out.println(j + "<" + (j - gap));
-                    
+                //保存该组里第一个位置的值作为插入值
+                int temp = arr[i];
+                int j = i-gap;
+                //如果后一个小,大的向后移动
+                while(j >= 0 && arr[j]>temp){
+                    System.out.println("move:"+(j+gap) + "=" + j);
+
                     //大的向后移动
-                    arr[j] = arr[j-gap];
-                    //移动下标到下一个,如果是2个一组,则为移动到下一组
+                    arr[j+gap] = arr[j];
+                    //j值保存前一个的位置的下标,只有在条件成立时才可以
                     j = j - gap;
 
-                    for (int item : arr) {
-                        System.out.print(item + " ");
-                    }
-                    System.out.println();
+                    for (int item : arr) {System.out.print(item + " ");}System.out.println();
                 }
-                //把最小值插入到前面
-                arr[j] = temp;
+                //把最小值(插入值)插入到前面
+                System.out.println("insert:"+(j+gap) + "=" + i);
+                arr[j+gap] = temp;
 
-                for (int item : arr) {
-                    System.out.print(item + " ");
-                }
-                System.out.println();
+                for (int item : arr) {System.out.print(item + " ");}System.out.println();
             }
-
+            
+            for (int item : arr) {System.out.print(item + " ");}System.out.println();
             System.out.println();
         }
 
     }
+
+    /**
+     * 降序
+     * @param array
+     */
+    public static void sortXiErCopy(int[] array){
+        int[] arr = Arrays.copyOf(array,array.length);  
+
+        for (int gap = arr.length/2; gap > 0; gap/=2) {
+            
+            for(int i = gap;i<arr.length;i++){
+
+                int j = i;
+                int temp = arr[j];
+
+                if(arr[j]>arr[j-gap]){
+                    arr[j] = arr[j-gap];
+                    j = j - gap;
+                }
+                arr[j] = temp;
+            }
+        }
+
+        for (int item : arr) {System.out.print(item + " ");}System.out.println();
+    }
+
 
 }
