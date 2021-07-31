@@ -41,6 +41,10 @@ public class XiErSort {
     public static void main(String[] args) {
         int[] array = {8,9,1,7,2,3,5,4,6,0};
         sortXiEr(array);
+
+        System.out.println("==================================");
+
+        sortXiErDesc(array);
     }
 
     /**
@@ -91,21 +95,37 @@ public class XiErSort {
      * 降序
      * @param array
      */
-    public static void sortXiErCopy(int[] array){
+    public static void sortXiErDesc(int[] array){
         int[] arr = Arrays.copyOf(array,array.length);  
 
         for (int gap = arr.length/2; gap > 0; gap/=2) {
+            System.out.println("gap:"+gap);
             
-            for(int i = gap;i<arr.length;i++){
+            //从第一个分组开始
+            for(int after = gap;after<arr.length;after++){
+                System.out.println("after:"+after);
 
-                int j = i;
-                int temp = arr[j];
+                //保存后面的插入值
+                int temp = arr[after];
+                //保存前面的下标
+                int before = after-gap;
 
-                if(arr[j]>arr[j-gap]){
-                    arr[j] = arr[j-gap];
-                    j = j - gap;
+                //如果前一个小于后面的,后面的往前移动
+                while(before >= 0 && arr[before]<temp){
+                    System.out.println("after:"+after+",before:"+before);
+                    
+                    arr[before+gap] = arr[before];
+                    //判断组里的下个相邻的
+                    before = before - gap;
+
+                    for (int item : arr) {System.out.print(item + " ");}System.out.println();
+                    System.out.println();
                 }
-                arr[j] = temp;
+
+                arr[before+gap] = temp;
+
+                for (int item : arr) {System.out.print(item + " ");}System.out.println();
+                System.out.println();
             }
         }
 
