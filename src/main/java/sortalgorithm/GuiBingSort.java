@@ -168,7 +168,7 @@ public class GuiBingSort {
 
     protected static int[] merge2(int[] left,int[] right){
         int[] result = new int[left.length + right.length];
-
         return result;
     }
+    
 }
