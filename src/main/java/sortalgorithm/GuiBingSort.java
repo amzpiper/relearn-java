@@ -37,18 +37,19 @@ public class GuiBingSort {
         for (int item : array) {System.out.print(item + " ");}System.out.println();
         System.out.println();
 
-        //自上而下递归
+        //自上而下递归-正序
         arr = sort(array);
         System.out.println("arr.length < 2,结果:");
         for (int item : arr) {System.out.print(item + " ");}System.out.println();
         System.out.println();
 
-        //自下而上递归
+        //自上而下递归-倒叙
         arr = sort2(array);
         System.out.println("arr.length < 2,结果:");
         for (int item : arr) {System.out.print(item + " ");}System.out.println();
         System.out.println();
-
+        
+        //自下而上递归
     }
 
     /**
@@ -163,11 +164,44 @@ public class GuiBingSort {
      * @param array
      */
     public static int[] sort2(int[] array){
-        return array;
+        int[] arr = Arrays.copyOf(array, array.length);
+
+        if(arr.length < 2){
+            return arr;
+        }
+
+        int middle = arr.length / 2;
+        int[] left = Arrays.copyOfRange(arr,0,middle);
+        int[] right = Arrays.copyOfRange(arr,middle,arr.length);
+
+        arr =  merge2(sort2(left), sort2(right));
+        return arr;
     }
 
     protected static int[] merge2(int[] left,int[] right){
         int[] result = new int[left.length + right.length];
+
+        int i = 0;
+        while(left.length>0 && right.length>0){
+            if(left[0] > right[0] ){
+                result[i++] = left[0];
+                left = Arrays.copyOfRange(left, 1, left.length);
+            }else{
+                result[i++] = right[0];
+                right = Arrays.copyOfRange(right, 1, right.length);
+            }
+        }
+
+        while(left.length > 0){
+            result[i++] = left[0];
+            left = Arrays.copyOfRange(left, 1, left.length);
+        }
+
+        while(right.length > 0){
+            result[i++] = right[0];
+            right = Arrays.copyOfRange(right, 1, right.length);
+        }
+
         return result;
     }
     
