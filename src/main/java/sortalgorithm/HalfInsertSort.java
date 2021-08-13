@@ -4,8 +4,9 @@ import java.util.Arrays;
 
 /**
  * 折半插入排序:
- * 
- * 
+ * 顺序地把待排序的序列中的各个元素按其关键字的大小，通过折半查找插入到已排序的序列的适当位置
+ * 时间复杂度：O(nlogn)
+ * 空间复杂度：O(1)
  */
 public class HalfInsertSort {
     public static void main(String[] args) {
