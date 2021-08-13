@@ -1,5 +1,7 @@
 package sortalgorithm;
 
+import java.util.Arrays;
+
 /**
  * @auth guoyuhang
  * @data 2021/08/13
@@ -22,8 +24,26 @@ package sortalgorithm;
 public class QuickSort {
     
     public static void main(String[] args) {
+        int[] array = {78,69,31,43,55,10,20,88,99};
+
+        int[] arr = Arrays.copyOf(array, array.length);
+        quickSort(arr,0,arr.length - 1);
+    }
+
+    public static int[] quickSort(int[] arr , int left, int right){
+
+
+        return arr;
+    }
+
+    public static int partition(int[] arr , int left, int right){
+        int pivot = left;
+
+        return pivot;
+    }
+
+    public static void swap(int[] arr,int i,int j){
         
     }
 
-    public int[] quickSort()
 }
