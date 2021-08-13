@@ -66,7 +66,7 @@ import java.util.Arrays;
 public class QuickSort {
     
     public static void main(String[] args) {
-        int[] array = {78,69,31,43,55,10,20,88,99};
+        int[] array = {6,2,7,3,8,9};
 
         int[] arr = Arrays.copyOf(array, array.length);
         quickSort(arr,0,arr.length - 1);
@@ -77,35 +77,56 @@ public class QuickSort {
     }
 
     public static void quickSort(int[] array , int start, int end){        
-        
+        System.out.println("----------------------------------------");
+
         int i=start;
         int j=end;
         int key=array[i];//默认第一个是基准
+        System.out.println("基准："+key);
 
-        while(i < j)
+        if(i < j)
         {
             //找小的
             while(i < j && array[j] >= key){
                 j--;//当end结点值大于基准值时，向前移动，直到找到小于基准值的值
+                System.out.println("找到小的下标:"+j+",arr["+j+"]:"+array[j]);
             }
             if(i < j)
             {
+                System.out.println("交换,arr["+i+"]<==>arr["+j+"]");
                 array[i] = array[j];
                 i++;
+                
+                for(int item:array)
+                {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
             }
 
             //找大的
             while(i < j && array[i] <= key){
-                i++;
+                i++;//当end结点值小于基准值时，向后移动，直到找到大于基准值的值
+                System.out.println("找到大的下标:"+i+",arr["+i+"]:"+array[i]);
             }
             if(i < j)
             {
                 array[j] = array[i];
                 j--;
+                for(int item:array)
+                {
+                    System.out.print(item + " ");
+                }
+                System.out.println();
             }
         }
 
         array[i] = key;//此时start和end 已经指向同一元素
+        for(int item:array)
+        {
+            System.out.print(item + " ");
+        }
+        System.out.println();
 
         //继续分组进行快速排序,直到
         if(i - 1 > start) {
