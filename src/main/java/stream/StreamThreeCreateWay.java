@@ -28,7 +28,5 @@ public class StreamThreeCreateWay {
 
         Stream<Double> generate = Stream.generate(Math::random).limit(3);
         generate.forEach(System.out::println);
-        
-        
     }
 }
