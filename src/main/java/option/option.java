@@ -87,7 +87,11 @@ public class option {
         result = Optional.ofNullable(user).orElseGet(() -> createNewUser());
         // 这个示例中，两个 Optional  对象都包含非空值，两个方法都会返回对应的非空值。不过，orElse() 方法仍然创建了 User 对象。与之相反，orElseGet() 方法不创建 User 对象。
         // 在执行较密集的调用时，比如调用 Web 服务或数据查询，这个差异会对性能产生重大影响。
+
+
     }   
+
+
     static User createNewUser(){
         System.out.println("Creating New User");
         User user = new option().new User();
@@ -96,6 +100,7 @@ public class option {
         return user;
     }
 
+    
     class User{
         public String name;
         public String email;
