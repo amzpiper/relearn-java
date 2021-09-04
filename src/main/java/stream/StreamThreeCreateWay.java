@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class createway {
+public class StreamThreeCreateWay {
     public static void main(String[] args) {
         // 方式一：通过 java.util.Collection.stream() 方法用集合创建流
         List<String> list = Arrays.asList("a", "b", "c");
