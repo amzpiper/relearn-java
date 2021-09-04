@@ -44,7 +44,7 @@ public class ViewFieldAndMethodDemo {
         // 4、设置字段值
         // 设置字段值是通过Field.set(Object, Object)实现的，其中第一个Object参数是指定的实例，第二个Object参数是待修改的值。
         Person person2 = new Person("guoyuhang");
-        Class pClass2 = person.getClass();
+        Class pClass2 = person2.getClass();
         Field field2 = pClass2.getDeclaredField("name");
         field2.setAccessible(true);
         field2.set(person2, "guoyuhang2");
