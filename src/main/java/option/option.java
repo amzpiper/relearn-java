@@ -1,5 +1,8 @@
 package option;
 
+import java.security.cert.PKIXRevocationChecker.Option;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class option {
@@ -88,8 +91,68 @@ public class option {
         // 这个示例中，两个 Optional  对象都包含非空值，两个方法都会返回对应的非空值。不过，orElse() 方法仍然创建了 User 对象。与之相反，orElseGet() 方法不创建 User 对象。
         // 在执行较密集的调用时，比如调用 Web 服务或数据查询，这个差异会对性能产生重大影响。
 
+        // 4.返回异常
+        //除了 orElse() 和 orElseGet() 方法，Optional 还定义了 orElseThrow() API —— 它会在对象为空的时候抛出异常，而不是返回备选的值：
+        user = null;
+        // result = Optional.ofNullable(user).orElseThrow(() -> new IllegalArgumentException());
+        //这里，如果 user 值为 null，会抛出 IllegalArgumentException。
+        // 这个方法让我们有更丰富的语义，可以决定抛出什么样的异常，而不总是抛出 NullPointerException。
+        // 现在我们已经很好地理解了如何使用 Optional，我们来看看其它可以对 Optional 值进行转换和过滤的方法。
 
-    }   
+        // 5.转换值和过滤的方法
+        // 5.1 转换值
+        // 有很多种方法可以转换 Optional  的值。我们从 map() 和 flatMap() 方法开始。
+        // 先来看一个使用 map() API 的例子：
+        user = new option().new User();
+        user.setEmail("email@qq.com");
+        user.setName("name");
+        String email = Optional.ofNullable(user).map( u -> u.getEmail()).orElse("other@qq.com");
+        System.out.println(email);
+        // map() 对值应用(调用)作为参数的函数，然后将返回的值包装在 Optional 中。这就使对返回值进行链试调用的操作成为可能 —— 这里的下一环就是 orElse()。
+        // 相比这下，flatMap() 也需要函数作为参数，并对值调用这个函数，然后直接返回结果。
+        // 下面的操作中，我们给 User 类添加了一个方法，用来返回 Optional：
+        // 既然 getter 方法返回 String 值的 Optional，你可以在对 User 的 Optional 对象调用 flatMap() 时，用它作为参数。其返回的值是解除包装的 String 值：
+        user.setPosition("Developer");
+        String position = Optional.ofNullable(user).flatMap( u -> u.getPosition()).orElse("default");
+        System.out.println(position);
+
+        // 5.2 过滤值
+        // Optional  类也提供了按条件“过滤”值的方法。
+        // filter() 接受一个 Predicate 参数，返回测试结果为 true 的值。如果测试结果为 false，会返回一个空的 Optional。
+        // 来看一个根据基本的电子邮箱验证来决定接受或拒绝 User(用户) 的示例：
+        Optional<User> result2 = Optional.ofNullable(user).filter(u -> u.getEmail()!=null && u.getEmail().contains("@"));
+        System.out.println(result2.isPresent());
+        System.out.println(result2.get().getEmail());
+        // 如果通过过滤器测试，result 对象会包含非空值。
+
+        // 6.Optional 类的链式方法
+        user = new option().new User();
+        user.setEmail("email@qq.com");
+        user.setName("name");
+        user.setPosition("Developer");
+        Country country = new option().new Country();
+        country.setIsocode("abc");
+        Address address = new option().new Address();
+        address.setCountry(country);
+        user.setAddress(address);
+        // 现在可以删除 null 检查，替换为 Optional 的方法：
+        // 结果现在的代码看起来比之前采用条件分支的冗长代码简洁多了。
+        String msg = Optional.ofNullable(user).flatMap(User::getAddress).flatMap(Address::getCountry).map(Country::getIsocode).orElse("defalut").toUpperCase();
+        System.out.println("msg:"+msg);
+
+        // 7.总结：
+        // Optional 主要用作返回类型。在获取到这个类型的实例后，如果它有值，你可以取得这个值，否则可以进行一些替代行为。
+        // Optional 类有一个非常有用的用例，就是将其与流或其它返回 Optional 的方法结合，以构建流畅的API。
+        // 我们来看一个示例，使用 Stream 返回 Optional 对象的 findFirst() 方法：
+        List<User> users = new ArrayList<User>();
+        users.add(user);
+        users.add(user);
+        user = users.stream().findFirst().filter(u -> u.getEmail()!=null && u.getEmail().contains("$")).orElse(user2);
+        System.out.println(user.getEmail());
+        // Optional 是 Java 语言的有益补充 —— 它旨在减少代码中的 NullPointerExceptions，虽然还不能完全消除这些异常。
+        // 它也是精心设计，自然融入 Java 8 函数式支持的功能。
+        // 总的来说，这个简单而强大的类有助于创建简单、可读性更强、比对应程序错误更少的程序。
+    }
 
 
     static User createNewUser(){
@@ -100,13 +163,31 @@ public class option {
         return user;
     }
 
-    
+
     class User{
         public String name;
         public String email;
+        private String position;
+        private Address address;
 
         public User(){
             System.out.println("create new User");
+        }
+
+        public void setPosition(String string) {
+            this.position = string;
+        }
+
+        public Optional<String> getPosition(){
+            return Optional.ofNullable(position);
+        }
+
+        public Optional<Address> getAddress() {
+            return Optional.ofNullable(address);
+        }
+
+        public void setAddress(Address address) {
+            this.address = address;
         }
 
         public String getEmail() {
@@ -122,6 +203,29 @@ public class option {
 
         public void setName(String name) {
             this.name = name;
+        }
+    }
+    class Address{
+        private Country country;
+
+        public Optional<Country> getCountry() {
+            return Optional.ofNullable(country);
+        }
+
+        public void setCountry(Country country) {
+            this.country = country;
+        }
+    }
+
+    class Country{
+        public String isocode;
+
+        public String getIsocode() {
+            return isocode;
+        }
+
+        public void setIsocode(String isocode) {
+            this.isocode = isocode;
         }
     }
 }
