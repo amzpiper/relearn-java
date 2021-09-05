@@ -85,5 +85,20 @@ public class StreamExample {
         long count = list5.stream().filter(x -> x>6).count();
         System.out.println("list中大于6的元素个数：" + count);
 
+        // 4 映射(map/flatMap)
+        // 映射，可以将一个流的元素按照一定的映射规则映射到另一个流中。分为map和flatMap：
+        // map：接收一个函数作为参数，该函数会被应用到每个元素上，并将其映射成一个新的元素。
+        // flatMap：接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流。
+        // 案例一：英文字符串数组的元素全部改为大写,整数数组每个元素+3
+        String[] strArr = { "abcd", "bcdd", "defde", "fTr" };
+        List<String> strList = Arrays.asList(strArr).stream().map(String::toUpperCase).collect(Collectors.toList());
+        List<String> strList2 = Arrays.stream(strArr).map(String::toUpperCase).collect(Collectors.toList());
+        System.out.println("每个元素大写：" + strList);
+        System.out.println("每个元素大写：" + strList2);
+
+        List<Integer> intList = Arrays.asList(1,3,5,7,9,11);
+        List<Integer> intListNew = intList.stream().map(x -> x+3).collect(Collectors.toList());
+        System.out.println("每个元素+3：" + intListNew);
+        
     }
 }
