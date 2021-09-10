@@ -99,6 +99,18 @@ public class StreamExample {
         List<Integer> intList = Arrays.asList(1,3,5,7,9,11);
         List<Integer> intListNew = intList.stream().map(x -> x+3).collect(Collectors.toList());
         System.out.println("每个元素+3：" + intListNew);
-        
+        //案例二：将员工的薪资全部增加1000。
+        List<Person> personList3 = new ArrayList<Person>();
+        personList.add(new Person("Tom", 8900, 23, "male", "New York"));
+        personList.add(new Person("Jack", 7000, 25, "male", "Washington"));
+        personList.add(new Person("Lily", 7800, 21, "female", "Washington"));
+        personList.add(new Person("Anni", 8200, 24, "female", "New York"));
+        personList.add(new Person("Owen", 9500, 25, "male", "New York"));
+        personList.add(new Person("Alisa", 7900, 26, "female", "New York"));
+
+        //不改变原先员工集合的方式
+        List<Person> personNew1 = personList3.stream().map(person ->{
+            Person personNew = new Person(person.getName(), person.getSalary()+1000), person, sex, area)
+        }).
     }
 }
