@@ -90,27 +90,42 @@ public class StreamExample {
         // map：接收一个函数作为参数，该函数会被应用到每个元素上，并将其映射成一个新的元素。
         // flatMap：接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流。
         // 案例一：英文字符串数组的元素全部改为大写,整数数组每个元素+3
+        // 元素全部改为大写
         String[] strArr = { "abcd", "bcdd", "defde", "fTr" };
         List<String> strList = Arrays.asList(strArr).stream().map(String::toUpperCase).collect(Collectors.toList());
         List<String> strList2 = Arrays.stream(strArr).map(String::toUpperCase).collect(Collectors.toList());
         System.out.println("每个元素大写：" + strList);
         System.out.println("每个元素大写：" + strList2);
-
+        // 整数数组每个元素+3
         List<Integer> intList = Arrays.asList(1,3,5,7,9,11);
         List<Integer> intListNew = intList.stream().map(x -> x+3).collect(Collectors.toList());
         System.out.println("每个元素+3：" + intListNew);
         //案例二：将员工的薪资全部增加1000。
         List<Person> personList3 = new ArrayList<Person>();
-        personList.add(new Person("Tom", 8900, 23, "male", "New York"));
-        personList.add(new Person("Jack", 7000, 25, "male", "Washington"));
-        personList.add(new Person("Lily", 7800, 21, "female", "Washington"));
-        personList.add(new Person("Anni", 8200, 24, "female", "New York"));
-        personList.add(new Person("Owen", 9500, 25, "male", "New York"));
-        personList.add(new Person("Alisa", 7900, 26, "female", "New York"));
-
+        personList3.add(new Person("Tom", 8900, 23, "male", "New York"));
+        personList3.add(new Person("Jack", 7000, 25, "male", "Washington"));
+        personList3.add(new Person("Lily", 7800, 21, "female", "Washington"));
+        personList3.add(new Person("Anni", 8200, 24, "female", "New York"));
+        personList3.add(new Person("Owen", 9500, 25, "male", "New York"));
+        personList3.add(new Person("Alisa", 7900, 26, "female", "New York"));
         //不改变原先员工集合的方式
         List<Person> personNew1 = personList3.stream().map(person ->{
-            Person personNew = new Person(person.getName(), person.getSalary()+1000), person, sex, area)
-        }).
+            Person personNew = new Person(
+                person.getName(), 
+                person.getSalary()+1000, 
+                person.getAge(), 
+                person.getSex(), 
+                person.getArea()
+            );
+            return personNew;
+        }).collect(Collectors.toList());
+        System.out.println("将员工的薪资全部增加1000：" + personNew1);
+        // 改变原来员工集合的方式
+        List<Person> personNew2 = personList3.stream().map(person ->{
+            person.setSalary(person.getSalary()+1000);
+            return person;
+        }).collect(Collectors.toList());
+        System.out.println("将员工的薪资全部增加1000：" + personNew2);
+        
     }
 }
