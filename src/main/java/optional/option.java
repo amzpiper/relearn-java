@@ -92,8 +92,8 @@ public class option {
 
         // 4.返回异常
         //除了 orElse() 和 orElseGet() 方法，Optional 还定义了 orElseThrow() API —— 它会在对象为空的时候抛出异常，而不是返回备选的值：
-        user = null;
-        // result = Optional.ofNullable(user).orElseThrow(() -> new IllegalArgumentException());
+        // user = null;
+        result = Optional.ofNullable(user).orElseThrow(() -> new IllegalArgumentException());
         //这里，如果 user 值为 null，会抛出 IllegalArgumentException。
         // 这个方法让我们有更丰富的语义，可以决定抛出什么样的异常，而不总是抛出 NullPointerException。
         // 现在我们已经很好地理解了如何使用 Optional，我们来看看其它可以对 Optional 值进行转换和过滤的方法。
@@ -125,14 +125,16 @@ public class option {
         // 如果通过过滤器测试，result 对象会包含非空值。
 
         // 6.Optional 类的链式方法
+        Country country = new option().new Country();
+        country.setIsocode("abc");
+
+        Address address = new option().new Address();
+        address.setCountry(country);
+
         user = new option().new User();
         user.setEmail("email@qq.com");
         user.setName("name");
         user.setPosition("Developer");
-        Country country = new option().new Country();
-        country.setIsocode("abc");
-        Address address = new option().new Address();
-        address.setCountry(country);
         user.setAddress(address);
         // 现在可以删除 null 检查，替换为 Optional 的方法：
         // 结果现在的代码看起来比之前采用条件分支的冗长代码简洁多了。
@@ -146,7 +148,8 @@ public class option {
         List<User> users = new ArrayList<User>();
         users.add(user);
         users.add(user);
-        user = users.stream().findFirst().filter(u -> u.getEmail()!=null && u.getEmail().contains("$")).orElse(user2);
+        Optional<User> findFirst = users.stream().findFirst();
+        findFirst.filter(u -> u.getEmail()!=null && u.getEmail().contains("$")).orElse(user2);
         System.out.println(user.getEmail());
         // Optional 是 Java 语言的有益补充 —— 它旨在减少代码中的 NullPointerExceptions，虽然还不能完全消除这些异常。
         // 它也是精心设计，自然融入 Java 8 函数式支持的功能。

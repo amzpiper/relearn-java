@@ -153,6 +153,42 @@ public class StreamExample {
             return s2;
         }).collect(Collectors.toList());
         System.out.println("将两个字符数组合并成一个新的字符数组:" + listNew);
+        //两个字符数组合并成一个新的字符数组:[m, k, l, a, 1, 3, 5, 7]
 
+
+        // 5 归约(reduce)
+        // 归约，也称缩减，顾名思义，是把一个流缩减成一个值，能实现对集合求和、求乘积和求最值操作。
+
+        // 案例一：求Integer集合的元素之和、乘积和最大值。
+        // 和
+        List<Integer> list7 = Arrays.asList(1,2,3,4,5,6);
+        Optional<Integer> sum = list7.stream().reduce( (x,y) -> x+y );
+        System.out.println("sum:"+sum.get());
+        Optional<Integer> sum2 = list7.stream().reduce(Integer::sum);
+        System.out.println("sum2:"+sum2.get());
+        Integer sum3 = list7.stream().reduce(0, Integer::sum);
+        System.out.println("sum3:"+sum3);
+        Integer sum4 = list7.stream().reduce(2, (x,y)->x+y);
+        System.out.println("sum4:"+sum4);
+        // 积
+        Optional<Integer> product = list7.stream().reduce((x,y)-> x*y);
+        System.out.println("product:"+product.get());
+        Integer product2 = list7.stream().reduce(1,(x,y)-> x*y);
+        System.out.println("product2:"+product2);
+        // 最大值
+        Optional<Integer> ma = list7.stream().reduce( (x,y) -> x>y ? x:y );
+        System.out.println("max:"+ma.get());
+        Integer ma2 = list7.stream().reduce(0,Integer::max);
+        System.out.println("max2:"+ma2);
+
+        // 案例二：求所有员工的工资之和和最高工资。
+        List<Person> personList4 = new ArrayList<Person>();
+        personList4.add(new Person("Tom", 8900, 23, "male", "New York"));
+        personList4.add(new Person("Jack", 7000, 25, "male", "Washington"));
+        personList4.add(new Person("Lily", 7800, 21, "female", "Washington"));
+        personList4.add(new Person("Anni", 8200, 24, "female", "New York"));
+        personList4.add(new Person("Owen", 9500, 25, "male", "New York"));
+        personList4.add(new Person("Alisa", 7900, 26, "female", "New York"));
+        Optional<Integer> sumSalary = 
     }
 }
