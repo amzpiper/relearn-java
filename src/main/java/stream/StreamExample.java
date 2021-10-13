@@ -5,15 +5,12 @@ import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StreamExample {
     
     public static void main(String[] args) {
-
-
         // 1 遍历/匹配（foreach/find/match）
 
         // Stream也是支持类似集合的遍历和匹配元素的，只是Stream中的元素是以Optional类型存在的。Stream的遍历、匹配非常简单。
@@ -160,6 +157,7 @@ public class StreamExample {
         // 归约，也称缩减，顾名思义，是把一个流缩减成一个值，能实现对集合求和、求乘积和求最值操作。
 
         // 案例一：求Integer集合的元素之和、乘积和最大值。
+        System.out.println("案例一：求Integer集合的元素之和、乘积和最大值。");
         // 和
         List<Integer> list7 = Arrays.asList(1,2,3,4,5,6);
         Optional<Integer> sum = list7.stream().reduce( (x,y) -> x+y );
@@ -182,6 +180,7 @@ public class StreamExample {
         System.out.println("max2:"+ma2);
 
         // 案例二：求所有员工的工资之和和最高工资。
+        System.out.println("案例二：求所有员工的工资之和和最高工资。");
         List<Person> personList4 = new ArrayList<Person>();
         personList4.add(new Person("Tom", 8900, 23, "male", "New York"));
         personList4.add(new Person("Jack", 7000, 25, "male", "Washington"));
@@ -189,6 +188,10 @@ public class StreamExample {
         personList4.add(new Person("Anni", 8200, 24, "female", "New York"));
         personList4.add(new Person("Owen", 9500, 25, "male", "New York"));
         personList4.add(new Person("Alisa", 7900, 26, "female", "New York"));
-        Optional<Integer> sumSalary = 
+        // 求工资之和方式1：
+        Optional<Integer> sumSalary = personList4.stream().map(Person::getSalary).reduce(Integer::sum);
+        System.out.println("求工资之和方式1："+sumSalary.get());
+        // 求工资之和方式2：
+        
     }
 }

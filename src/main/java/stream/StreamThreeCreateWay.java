@@ -4,14 +4,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.lang.SuppressWarnings;
 
 public class StreamThreeCreateWay {
     public static void main(String[] args) {
         // 方式一：通过 java.util.Collection.stream() 方法用集合创建流
         List<String> list = Arrays.asList("a", "b", "c");
         // 黄健一个顺序流
+        @SuppressWarnings("all")
         Stream<String> stream = list.stream();
         // 创建一个并行流
+        @SuppressWarnings("all")
         Stream<String> parallelStream = list.parallelStream();
 
         // 方式二：使用java.util.Arrays.stream(T[] array)方法用数组创建流
