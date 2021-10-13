@@ -189,9 +189,17 @@ public class StreamExample {
         personList4.add(new Person("Owen", 9500, 25, "male", "New York"));
         personList4.add(new Person("Alisa", 7900, 26, "female", "New York"));
         // 求工资之和方式1：
-        Optional<Integer> sumSalary = personList4.stream().map(Person::getSalary).reduce(Integer::sum);
-        System.out.println("求工资之和方式1："+sumSalary.get());
+        Optional<Integer> sumSalary1 = personList4.stream().map(Person::getSalary).reduce(Integer::sum);
+        System.out.println("求工资之和方式1："+sumSalary1.get());
         // 求工资之和方式2：
-        
+        //<U> U reduce(U identity,BiFunction<U, ? super T, U> accumulator,BinaryOperator<U> combiner);
+        Integer sumSalary2 = personList.stream().reduce(0, (salarySum, p) -> salarySum += p.getSalary(),
+        (salarySum1, salarySum2) -> salarySum1 + salarySum2);
+        System.out.println("求工资之和方式2："+sumSalary2);
+        // 求工资之和方式3：
+        //<U> U reduce(U identity,BiFunction<U, ? super T, U> accumulator,BinaryOperator<U> combiner);
+        Integer sumSalary3 = personList.stream().reduce(0, (sumSalary, p) -> sumSalary += p.getSalary(), Integer::sum);
+        System.out.println("求工资之和方式3："+sumSalary3);
+
     }
 }
