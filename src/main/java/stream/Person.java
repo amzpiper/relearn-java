@@ -58,11 +58,12 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Age:"+this.getAge()
+        return "{Age:"+this.getAge()
         +",Area:"+this.getArea()
         +",Name:"+this.getName()
         +",Salary:"+this.getSalary()
-        +",Sex:"+this.getSex();
+        +",Sex:"+this.getSex()
+        +"}";
     }
     
 }

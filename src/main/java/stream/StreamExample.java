@@ -1,7 +1,14 @@
 package stream;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -154,7 +161,15 @@ public class StreamExample {
 
 
         // 5 归约(reduce)
+        // https://blog.csdn.net/zhang89xiao/article/details/77164866
         // 归约，也称缩减，顾名思义，是把一个流缩减成一个值，能实现对集合求和、求乘积和求最值操作。
+        // Optional<T> reduce(BinaryOperator<T> accumulator);
+        // T reduce(T identity, BinaryOperator<T> accumulator);
+        //<U> U reduce(U identity,BiFunction<U, ? super T, U> accumulator,BinaryOperator<U> combiner);
+        //第三个函数参数并没有执行
+        //Stream是支持并发操作的，为了避免竞争，对于reduce线程都会有独立的result，combiner的作用在于合并每个线程的result得到最终结果。
+        //这也说明了了第三个函数参数的数据类型必须为返回数据类型了。
+        //需要注意的是，因为第三个参数用来处理并发操作，如何处理数据的重复性，应多做考虑，否则会出现重复数据
 
         // 案例一：求Integer集合的元素之和、乘积和最大值。
         System.out.println("案例一：求Integer集合的元素之和、乘积和最大值。");
@@ -190,16 +205,86 @@ public class StreamExample {
         personList4.add(new Person("Alisa", 7900, 26, "female", "New York"));
         // 求工资之和方式1：
         Optional<Integer> sumSalary1 = personList4.stream().map(Person::getSalary).reduce(Integer::sum);
-        System.out.println("求工资之和方式1："+sumSalary1.get());
+        Optional<Integer> sumSalary11 = personList4.stream().map(Person::getSalary).reduce((acc,item)-> {
+            acc += item;
+            return acc;
+        });
+        System.out.println("求工资之和方式1："+sumSalary11.get());
         // 求工资之和方式2：
-        //<U> U reduce(U identity,BiFunction<U, ? super T, U> accumulator,BinaryOperator<U> combiner);
         Integer sumSalary2 = personList.stream().reduce(0, (salarySum, p) -> salarySum += p.getSalary(),
         (salarySum1, salarySum2) -> salarySum1 + salarySum2);
         System.out.println("求工资之和方式2："+sumSalary2);
         // 求工资之和方式3：
-        //<U> U reduce(U identity,BiFunction<U, ? super T, U> accumulator,BinaryOperator<U> combiner);
-        Integer sumSalary3 = personList.stream().reduce(0, (sumSalary, p) -> sumSalary += p.getSalary(), Integer::sum);
+        Integer sumSalary3 = personList.stream().reduce(0, (salarySum, p) -> salarySum += p.getSalary(), Integer::sum);
         System.out.println("求工资之和方式3："+sumSalary3);
 
+        // 求最高工资方式1：
+        Integer maxSalary1 = personList.stream().reduce(0,(maxSalary, p) -> maxSalary>p.getSalary()?maxSalary:p.getSalary(),
+        (maxSalary11, maxSalary12) -> maxSalary11>maxSalary12?maxSalary11:maxSalary12);
+        System.out.println("求最高工资方式1："+maxSalary1);
+        // 求最高工资方式2：
+        Integer maxSalary2 = personList.stream().reduce(0,(maxSalary, p) -> maxSalary>p.getSalary()?maxSalary:p.getSalary(),
+        Integer::sum);
+        System.out.println("求最高工资方式2："+maxSalary2);
+
+
+        //6 收集(collect)
+        //collect，收集，可以说是内容最繁多、功能最丰富的部分了。
+        //从字面上去理解，就是把一个流收集起来，最终可以是收集成一个值也可以收集成一个新的集合。
+        //collect主要依赖java.util.stream.Collectors类内置的静态方法
+
+        //6.1归集(toList/toSet/toMap)
+        //因为流不存储数据，那么在流中的数据完成处理后，需要将流中的数据重新归集到新的集合里。
+        //toList、toSet和toMap比较常用，另外还有toCollection、toConcurrentMap等复杂一些的用法。
+        //下面用一个案例演示toList、toSet和toMap：
+        List<Integer> list8 = Arrays.asList(1, 6, 3, 4, 6, 7, 9, 6, 20);
+        List<Integer> list8New = list8.stream().filter(x -> x%2 ==0 ).collect(Collectors.toList());
+        System.out.println("toList:"+list8New);
+        
+        Set<Integer> set8New = list8.stream().filter(x -> x%2 == 0).collect(Collectors.toSet());
+        System.out.println("toSet:"+set8New);
+
+        List<Person> personList5 = new ArrayList<Person>();
+        personList5.add(new Person("Tom", 8900, 23, "male", "New York"));
+        personList5.add(new Person("Jack", 7000, 25, "male", "Washington"));
+        personList5.add(new Person("Lily", 7800, 21, "female", "Washington"));
+        personList5.add(new Person("Anni", 8200, 24, "female", "New York"));
+        personList5.add(new Person("Owen", 9500, 25, "male", "New York"));
+        personList5.add(new Person("Alisa", 7900, 26, "female", "New York"));
+        Map<String, Object> map = personList5.stream().filter(p -> p.getSalary() > 8000).collect(Collectors.toMap(Person::getName, p -> p));
+        System.out.println("toMap:" + map);
+        for(Entry<String, Object> entry: map.entrySet()){
+            System.out.println(entry.getKey() + "：" + entry.getValue().toString());
+        }
+        map.forEach((key,value)->{
+            System.out.println(key + "：" + value);
+        });
+        System.out.println("toMap-key去重：");
+        personList5.add(new Person("Anni2", 8200, 24, "female", "New York"));
+        Map<Integer, Object> map2 = personList5.stream().filter(p -> p.getSalary() > 8000).collect(Collectors.toMap(Person::getSalary, Function.identity(),(existing, replacement) -> existing));
+        map2.forEach((key,value)->{
+            System.out.println(key + "：" + value);
+        });    
+        System.out.println("toConcurrentMap：");
+        Map<Integer, Object> map3 = personList5.stream().filter(p -> p.getSalary() > 8000).collect(Collectors.toMap(Person::getSalary, Function.identity(),(existing, replacement) -> existing,ConcurrentHashMap::new));
+        map3.forEach((key,value)->{
+            System.out.println(key + "：" + value);
+        });
+        System.out.println("toTreeMap：");
+        Map<Integer, Object> map4 = personList5.stream().sorted(Comparator.comparing(Person::getSalary)).collect(Collectors.toMap(Person::getSalary, Function.identity(),(existing, replacement) -> existing,TreeMap::new));
+        map4.forEach((key,value)->{
+            System.out.println(key + "：" + value);
+        });
+
+        //6.2 统计(count/averaging)
+        //Collectors提供了一系列用于数据统计的静态方法：
+        // 计数：count
+        // 平均值：averagingInt、averagingLong、averagingDouble
+        // 最值：maxBy、minBy
+        // 求和：summingInt、summingLong、summingDouble
+        // 统计以上所有：summarizingInt、summarizingLong、summarizingDouble
+
+        //案例：统计员工人数、平均工资、工资总额、最高工资。
+        
     }
 }
