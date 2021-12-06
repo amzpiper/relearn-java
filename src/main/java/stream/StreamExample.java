@@ -264,7 +264,7 @@ public class StreamExample {
         Map<Integer, Object> map2 = personList5.stream().filter(p -> p.getSalary() > 8000).collect(Collectors.toMap(Person::getSalary, Function.identity(),(existing, replacement) -> existing));
         map2.forEach((key,value)->{
             System.out.println(key + "：" + value);
-        });    
+        });
         System.out.println("toConcurrentMap：");
         Map<Integer, Object> map3 = personList5.stream().filter(p -> p.getSalary() > 8000).collect(Collectors.toMap(Person::getSalary, Function.identity(),(existing, replacement) -> existing,ConcurrentHashMap::new));
         map3.forEach((key,value)->{
@@ -285,6 +285,22 @@ public class StreamExample {
         // 统计以上所有：summarizingInt、summarizingLong、summarizingDouble
 
         //案例：统计员工人数、平均工资、工资总额、最高工资。
-        
+        List<Person> personList6 = new ArrayList<Person>();
+        personList6.add(new Person("Tom", 8900, 23, "male", "New York"));
+        personList6.add(new Person("Jack", 7000, 25, "male", "Washington"));
+        personList6.add(new Person("Lily", 7800, 21, "female", "Washington"));
+        // 求员工人数
+        Long countLong = personList6.stream().count();
+        Long countLong2 = personList6.stream().collect(Collectors.counting());
+        System.out.println("求员工人数:"+countLong);
+        System.out.println("求员工人数:"+countLong2);
+        // 求平均工资
+        Double average = personList6.stream().collect(Collectors.averagingDouble(Person::getSalary));
+        System.out.println("求平均工资:"+average);
+        // 求最高工资
+        Optional<Integer> maxSalary = personList6.stream().map(Person::getSalary).collect(Collectors.maxBy(Integer::compare));
+        System.out.println("求最高工资:"+maxSalary.get());
+        Double collect = personList6.stream().collect(Collectors.summingDouble(Person::getSalary));
+        System.out.println("求工资总额:"+collect);
     }
 }
