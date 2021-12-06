@@ -12,6 +12,7 @@ import java.util.function.Function;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -302,5 +303,130 @@ public class StreamExample {
         System.out.println("求最高工资:"+maxSalary.get());
         Double collect = personList6.stream().collect(Collectors.summingDouble(Person::getSalary));
         System.out.println("求工资总额:"+collect);
+        // 一次性统计所有信息
+        DoubleSummaryStatistics collect2 = personList6.stream().collect(Collectors.summarizingDouble(Person::getSalary));
+        System.out.println("一次性统计所有信息:"+collect2);
+
+        //6.3 分组(partitioningBy/groupingBy)
+        //分区：将stream按条件分为两个Map，比如员工按薪资是否高于8000分为两部分。
+        //分组：将集合分为多个Map，比如员工按性别分组。有单级分组和多级分组。
+
+        //案例：将员工按薪资是否高于8000分为两部分；将员工按性别和地区分组
+        List<Person> personList7 = new ArrayList<Person>();
+        personList7.add(new Person("Tom", 8900, 20, "male", "New York"));
+        personList7.add(new Person("Jack", 7000, 20, "male", "Washington"));
+        personList7.add(new Person("Lily", 7800, 20, "female", "Washington"));
+        personList7.add(new Person("Anni", 8200, 20, "female", "New York"));
+        personList7.add(new Person("Owen", 9500, 20, "male", "New York"));
+        personList7.add(new Person("Alisa", 7900, 20, "female", "New York"));
+
+        // 将员工按薪资是否高于8000分组
+        Map<Boolean, List<Person>> part8000 = personList7.stream().collect(Collectors.partitioningBy(person -> person.getSalary() > 8000));
+        System.out.println("员工按薪资是否大于8000分组情况：" + part8000);
+        // 将员工按性别分组
+        Map<String, List<Person>> groupSex = personList7.stream().collect(Collectors.groupingBy(Person::getSex));
+        System.out.println("将员工按性别分组:" + groupSex);
+        // 将员工按性别和地区分组
+        Map<String, Map<String, List<Person>>> groupSexArea = personList7.stream().collect(Collectors.groupingBy(Person::getSex, Collectors.groupingBy(Person::getArea)));
+        System.out.println("将员工按性别和地区分组:" + groupSexArea);
+
+        // 6.4 接合(joining)
+        // 接合：将stream中的元素按照指定的分隔符拼接成字符串。
+
+        // 案例：将员工的姓名拼接成字符串
+        List<Person> personList8 = new ArrayList<Person>();
+        personList8.add(new Person("Tom", 8900, 20, "male", "New York"));
+        personList8.add(new Person("Jack", 7000, 20, "male", "Washington"));
+        personList8.add(new Person("Lily", 7800, 20, "female", "Washington"));
+        personList8.add(new Person("Anni", 8200, 20, "female", "New York"));
+        personList8.add(new Person("Owen", 9500, 20, "male", "New York"));
+        personList8.add(new Person("Alisa", 7900, 20, "female", "New York"));
+
+        // 所有员工的姓名
+        String allName = personList8.stream().map(p -> p.getName()).collect(Collectors.joining(","));
+        System.out.println("所有员工的姓名:"+allName);
+
+        // 6.5 归约(reducing)
+        // 归约：将stream中的元素经过指定的规则进行归约。
+        // Collectors类提供的reducing方法，相比于stream本身的reduce方法，增加了对自定义归约的支持。
+        
+        List<Person> personList9 = new ArrayList<Person>();
+        personList9.add(new Person("Tom", 8900, 20, "male", "New York"));
+        personList9.add(new Person("Jack", 7000, 20, "male", "Washington"));
+        personList9.add(new Person("Lily", 7800, 20, "female", "Washington"));
+        personList9.add(new Person("Lily2", 2700, 20, "female", "Washington"));
+
+        // 每个员工减去起征点后的薪资之和（这个例子并不严谨，但一时没想到好的例子)
+        Integer collect3 = personList9.stream().filter(x -> x.getSalary() > 5000).collect(Collectors.reducing(0, Person::getSalary, (a, b) -> a + b - 5000));
+        System.out.println("员工扣税薪资总和：" + collect3);
+        
+        // stream的reduce
+        Integer collect4 = personList9.stream().filter(x -> x.getSalary() > 5000).map(Person::getSalary).reduce(0, (a, b) -> a + b);
+        System.out.println("员工薪资总和：" + collect4);
+
+        // 7 排序(sorted)
+        // sorted，中间操作。有两种排序：
+        // sorted()：自然排序，流中元素需实现Comparable接口
+        // sorted(Comparator com)：Comparator排序器自定义排序
+
+        // 案例：按薪资从高到低排序（工资一样则按年龄由大到小）排序
+        List<Person> personList10 = new ArrayList<Person>();
+
+        personList10.add(new Person("Sherry", 9000, 24, "female", "New York"));
+        personList10.add(new Person("Tom", 8900, 22, "male", "Washington"));
+        personList10.add(new Person("Jack", 9000, 25, "male", "Washington"));
+        personList10.add(new Person("Lily", 8800, 26, "male", "New York"));
+        personList10.add(new Person("Alisa", 9000, 26, "female", "New York"));
+
+        // 按工资升序排序（自然排序）
+        String nameList = personList10.stream().sorted(Comparator.comparing(Person::getSalary)).map(Person::getName).collect(Collectors.joining(","));
+        System.out.println("按工资升序排序（自然排序）:"+nameList);
+        
+        // 按工资倒序排序
+        List<Person> collect5 = personList10.stream().sorted(Comparator.comparing(Person::getSalary).reversed()).collect(Collectors.toList());
+        System.out.println("按工资倒序排序");
+        collect5.forEach(System.out::println);
+
+        // 先按工资再按年龄升序排序
+        List<Person> collect6 = personList10.stream().sorted(Comparator.comparing(Person::getSalary).thenComparing(Person::getAge)).collect(Collectors.toList());
+        System.out.println("先按工资再按年龄升序排序");
+        collect6.forEach(System.out::println);
+        
+        // 先按工资再按年龄升序排序
+        List<Person> collect7 = personList10.stream().sorted(Comparator.comparing(Person::getSalary).thenComparing(Person::getAge)).collect(Collectors.toList());
+        System.out.println("先按工资再按年龄升序排序");
+        collect7.forEach(System.out::println);
+
+        // 先按工资再按年龄自定义排序（降序）
+        List<Person> collect8 = personList10.stream().sorted((p1, p2) -> {
+            if(p1.getSalary() == p2.getSalary()) {
+                return p2.getAge() - p1.getAge();
+            } else {
+                return p2.getSalary() - p1.getSalary();
+            }
+        }).collect(Collectors.toList());
+        System.out.println("先按工资再按年龄自定义排序(降序)");
+        collect8.forEach(System.out::println);
+
+        // 8 提取/组合
+        // 流也可以进行合并、去重、限制、跳过等操作。
+
+        String[] arr1 = { "a", "b", "c", "d" };
+        String[] arr2 = { "d", "e", "f", "g" };
+        Stream<String> stream11 = Stream.of(arr1);
+        Stream<String> stream22 = Stream.of(arr2);
+
+        // concat:合并两个流 distinct：去重
+        List<String> collect9 = Stream.concat(stream11, stream22).distinct().collect(Collectors.toList());
+        System.out.println("合并两个流："+collect9);
+        
+        // limit：限制从流中获得前n个数据
+        List<Integer> collect10 = Stream.iterate(1, x -> x + 2).limit(10).collect(Collectors.toList());
+        System.out.println("limit：限制从流中获得前n个数据:"+collect10);
+        
+        // skip：跳过前n个数据
+        List<Integer> collect11 = Stream.iterate(1, x -> x + 2).skip(5).limit(5).collect(Collectors.toList());
+        System.out.println("skip：跳过前n个数据:"+collect11);
+
     }
 }
