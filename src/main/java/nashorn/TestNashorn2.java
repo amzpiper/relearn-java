@@ -2,6 +2,8 @@ package nashorn;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -29,5 +31,25 @@ public class TestNashorn2 {
            System.out.println("执行脚本错误: "+ e.getMessage());
         }
         
+        ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
+        for (int i = 0; i < 10; i++) {
+            final int index = i;
+            try {
+                Thread.sleep(index * 100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+             
+            cachedThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println(index);
+                }
+            });
+            cachedThreadPool.submit(() -> {
+                System.out.println(index);
+            });
+        }
+        cachedThreadPool.shutdown();
     }
 }
