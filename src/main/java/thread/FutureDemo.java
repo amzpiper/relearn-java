@@ -20,6 +20,7 @@ public class FutureDemo {
         //
         //如果仔细看ExecutorService.submit()方法，可以看到，它返回了一个Future类型，一个Future类型的实例代表一个未来能获取结果的对象：
         ExecutorService es = Executors.newFixedThreadPool(4);
+        
         Callable callable = new Task2();
         Future<String> submit = es.submit(callable);
         // 从Future获取异步执行返回的结果:可能阻塞
