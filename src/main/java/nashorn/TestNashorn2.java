@@ -2,8 +2,12 @@ package nashorn;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -11,7 +15,7 @@ import javax.script.ScriptException;
 
 public class TestNashorn2 {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, ExecutionException, TimeoutException {
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
         ScriptEngine nashorn = scriptEngineManager.getEngineByName("nashorn");
           
@@ -40,15 +44,17 @@ public class TestNashorn2 {
                 e.printStackTrace();
             }
              
-            cachedThreadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    System.out.println(index);
-                }
-            });
-            cachedThreadPool.submit(() -> {
+            // cachedThreadPool.execute(new Runnable() {
+            //     @Override
+            //     public void run() {
+            //         System.out.println(index);
+            //     }
+            // });
+            Future f = cachedThreadPool.submit(() -> {
                 System.out.println(index);
+                return true;
             });
+            System.out.println(f.get(5,TimeUnit.MILLISECONDS));
         }
         cachedThreadPool.shutdown();
     }
